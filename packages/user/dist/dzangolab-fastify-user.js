@@ -1,49 +1,44 @@
 import "@dzangolab/fastify-mercurius";
-import p from "fastify-plugin";
-import { createTableFragment as l, createWhereIdFragment as y, createLimitFragment as d } from "@dzangolab/fastify-slonik";
-const u = "users", c = (t, n, e) => ({
-  findById: async (s) => {
-    const r = e`
-        SELECT *
-        FROM ${l(u)}
-        ${y(s)}
-      `;
-    return await n.connect((a) => a.maybeOne(r));
-  },
-  list: async (s = t.pagination.default_limit, r) => {
-    const i = e`
-        SELECT *
-        FROM ${l(u)}
-        ORDER BY id ASC
-        ${d(
-      Math.min(
-        s ?? t.pagination.default_limit,
-        t?.pagination.max_limit
-      ),
-      r
-    )};
-      `;
-    return await n.connect((o) => o.any(i));
+import l from "fastify-plugin";
+import { DefaultSqlFactory as u, BaseService as y } from "@dzangolab/fastify-slonik";
+const d = (t, e, s) => {
+  s();
+}, m = l(d);
+class p extends u {
+  /* eslint-enabled */
+}
+class i extends y {
+  /* eslint-enabled */
+  static TABLE = "users";
+  static LIMIT_DEFAULT = 20;
+  static LIMIT_MAX = 50;
+  constructor(e, s, r) {
+    super(e, s, r);
   }
-}), f = async (t, n, e) => {
+  get factory() {
+    if (!this.table)
+      throw new Error("Service table is not defined");
+    return this._factory || (this._factory = new p(this)), this._factory;
+  }
+}
+const v = {
+  user: async (t, e, s) => await new i(s.config, s.database).findById(e.id),
+  users: async (t, e, s) => await new i(s.config, s.database).list(e.limit, e.offset)
+}, S = { Query: v }, I = async (t, e, s) => {
   t.get(
     "/users",
     {
       preHandler: t.verifySession()
     },
-    async (s, r) => {
-      const i = c(s.config, s.slonik, s.sql), { limit: a, offset: o } = s.query, m = await i.list(a, o);
-      r.send(m);
+    async (r, o) => {
+      const a = new i(r.config, r.slonik), { limit: n, offset: c } = r.query, f = await a.list(n, c);
+      o.send(f);
     }
-  ), e();
-}, g = (t, n, e) => {
-  t.register(f), e();
-}, w = p(g), v = {
-  user: async (t, n, e) => await c(e.config, e.database, e.sql).findById(n.id),
-  users: async (t, n, e) => await c(e.config, e.database, e.sql).list(n.limit, n.offset)
-}, E = { Query: v };
+  ), s();
+};
 export {
-  w as default,
-  E as userResolver,
-  c as userService
+  i as UserProfileService,
+  m as default,
+  S as userProfileResolver,
+  I as userProfileRoutes
 };
