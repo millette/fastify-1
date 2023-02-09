@@ -10,7 +10,12 @@ declare module "fastify" {
 
 export { default } from "./plugin";
 
-export type { User, UserInput } from "./types";
+export type {
+  UserProfile,
+  UserProfileCreateInput,
+  UserProfileUpdateInput,
+} from "./types";
 
-export { default as userResolver } from "./model/users/resolver";
-export { default as userService } from "./model/users/service";
+export { default as userProfileResolver } from "./model/user-profile/resolver";
+export { default as UserProfileService } from "./model/user-profile/service";
+export { default as userProfileRoutes } from "./model/user-profile/controller";
