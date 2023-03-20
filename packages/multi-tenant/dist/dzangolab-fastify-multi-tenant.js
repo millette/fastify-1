@@ -2928,7 +2928,7 @@ const nn = async (n, e, t) => {
   try {
     const { config: r, slonik: s } = n, a = Me(r.slonik), o = Pe(r).migrations.path;
     if (je(o)) {
-      const u = await new Fe(r, s).all(["name", "slug"]).catch((Z) => (console.log(Z), [])), m = await $e(a);
+      const u = await new Fe(r, s).all(["name", "slug"]), m = await $e(a);
       for (const Z of u)
         n.log.info(`Running migrations for tenant ${Z.name}`), await ze({ client: m }, o, Z);
       await Ae(m, "public"), await m.end();

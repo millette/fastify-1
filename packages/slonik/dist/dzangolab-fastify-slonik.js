@@ -639,7 +639,7 @@ class _ {
     return E.create(this, this._def);
   }
   promise() {
-    return B.create(this, this._def);
+    return W.create(this, this._def);
   }
   or(e) {
     return G.create([this, e], this._def);
@@ -1437,7 +1437,7 @@ J.create = (r) => new J({
   typeName: p.ZodNull,
   ...v(r)
 });
-class U extends _ {
+class B extends _ {
   constructor() {
     super(...arguments), this._any = !0;
   }
@@ -1445,7 +1445,7 @@ class U extends _ {
     return w(e.data);
   }
 }
-U.create = (r) => new U({
+B.create = (r) => new B({
   typeName: p.ZodAny,
   ...v(r)
 });
@@ -2267,7 +2267,7 @@ D.create = (r, e) => new D({
   typeName: p.ZodSet,
   ...v(e)
 });
-class z extends _ {
+class U extends _ {
   constructor() {
     super(...arguments), this.validate = this.implement;
   }
@@ -2312,7 +2312,7 @@ class z extends _ {
       });
     }
     const a = { errorMap: t.common.contextualErrorMap }, o = t.data;
-    return this._def.returns instanceof B ? w(async (...i) => {
+    return this._def.returns instanceof W ? w(async (...i) => {
       const l = new S([]), f = await this._def.args.parseAsync(i, a).catch((ge) => {
         throw l.addIssue(n(i, ge)), l;
       }), g = await o(...f);
@@ -2336,13 +2336,13 @@ class z extends _ {
     return this._def.returns;
   }
   args(...e) {
-    return new z({
+    return new U({
       ...this._def,
       args: Z.create(e).rest(M.create())
     });
   }
   returns(e) {
-    return new z({
+    return new U({
       ...this._def,
       returns: e
     });
@@ -2354,7 +2354,7 @@ class z extends _ {
     return this.parse(e);
   }
   static create(e, t, n) {
-    return new z({
+    return new U({
       args: e || Z.create([]).rest(M.create()),
       returns: t || M.create(),
       typeName: p.ZodFunction,
@@ -2483,7 +2483,7 @@ te.create = (r, e) => new te({
   typeName: p.ZodNativeEnum,
   ...v(e)
 });
-class B extends _ {
+class W extends _ {
   unwrap() {
     return this._def.type;
   }
@@ -2502,7 +2502,7 @@ class B extends _ {
     })));
   }
 }
-B.create = (r, e) => new B({
+W.create = (r, e) => new W({
   type: r,
   typeName: p.ZodPromise,
   ...v(e)
@@ -2745,13 +2745,13 @@ class ne extends _ {
     });
   }
 }
-const Ie = (r, e = {}, t) => r ? U.create().superRefine((n, s) => {
+const Ie = (r, e = {}, t) => r ? B.create().superRefine((n, s) => {
   var a, o;
   if (!r(n)) {
     const i = typeof e == "function" ? e(n) : typeof e == "string" ? { message: e } : e, l = (o = (a = i.fatal) !== null && a !== void 0 ? a : t) !== null && o !== void 0 ? o : !0, f = typeof i == "string" ? { message: i } : i;
     s.addIssue({ code: "custom", ...f, fatal: l });
   }
-}) : U.create(), ft = {
+}) : B.create(), ft = {
   object: b.lazycreate
 };
 var p;
@@ -2760,7 +2760,7 @@ var p;
 })(p || (p = {}));
 const ht = (r, e = {
   message: `Input not instance of ${r.name}`
-}) => Ie((t) => t instanceof r, e), je = T.create, Ae = j.create, mt = me.create, pt = A.create, $e = H.create, gt = L.create, yt = ue.create, vt = Y.create, _t = J.create, xt = U.create, bt = M.create, kt = O.create, wt = le.create, Tt = E.create, St = b.create, Et = b.strictCreate, Nt = G.create, Ct = pe.create, Zt = K.create, Rt = Z.create, Ot = X.create, It = fe.create, jt = D.create, At = z.create, $t = Q.create, Mt = ee.create, Lt = $.create, Dt = te.create, Pt = B.create, Se = N.create, Vt = R.create, qt = P.create, zt = N.createWithPreprocess, Ut = ne.create, Bt = () => je().optional(), Wt = () => Ae().optional(), Ft = () => $e().optional(), Ht = {
+}) => Ie((t) => t instanceof r, e), je = T.create, Ae = j.create, mt = me.create, pt = A.create, $e = H.create, gt = L.create, yt = ue.create, vt = Y.create, _t = J.create, xt = B.create, bt = M.create, kt = O.create, wt = le.create, Tt = E.create, St = b.create, Et = b.strictCreate, Nt = G.create, Ct = pe.create, Zt = K.create, Rt = Z.create, Ot = X.create, It = fe.create, jt = D.create, At = U.create, $t = Q.create, Mt = ee.create, Lt = $.create, Dt = te.create, Pt = W.create, Se = N.create, Vt = R.create, qt = P.create, zt = N.createWithPreprocess, Ut = ne.create, Bt = () => je().optional(), Wt = () => Ae().optional(), Ft = () => $e().optional(), Ht = {
   string: (r) => T.create({ ...r, coerce: !0 }),
   number: (r) => j.create({ ...r, coerce: !0 }),
   boolean: (r) => H.create({
@@ -2770,7 +2770,7 @@ const ht = (r, e = {
   bigint: (r) => A.create({ ...r, coerce: !0 }),
   date: (r) => L.create({ ...r, coerce: !0 })
 }, Yt = y;
-var W = /* @__PURE__ */ Object.freeze({
+var z = /* @__PURE__ */ Object.freeze({
   __proto__: null,
   defaultErrorMap: F,
   setErrorMap: Xe,
@@ -2803,7 +2803,7 @@ var W = /* @__PURE__ */ Object.freeze({
   ZodSymbol: ue,
   ZodUndefined: Y,
   ZodNull: J,
-  ZodAny: U,
+  ZodAny: B,
   ZodUnknown: M,
   ZodNever: O,
   ZodVoid: le,
@@ -2816,12 +2816,12 @@ var W = /* @__PURE__ */ Object.freeze({
   ZodRecord: X,
   ZodMap: fe,
   ZodSet: D,
-  ZodFunction: z,
+  ZodFunction: U,
   ZodLazy: Q,
   ZodLiteral: ee,
   ZodEnum: $,
   ZodNativeEnum: te,
-  ZodPromise: B,
+  ZodPromise: W,
   ZodEffects: N,
   ZodTransformer: N,
   ZodOptional: R,
@@ -2894,7 +2894,7 @@ class Jt {
     const t = [], n = {};
     for (const a of e)
       t.push(d.identifier([se.decamelize(a)])), n[a] = !0;
-    const s = this.validationSchema instanceof W.ZodObject ? this.validationSchema.pick(n) : this.validationSchema;
+    const s = this.validationSchema instanceof z.ZodObject ? this.validationSchema.pick(n) : z.any();
     return d.type(s)`
       SELECT ${d.join(t, d.fragment`, `)}
       FROM ${this.getTableFragment()}
@@ -2951,8 +2951,8 @@ class Jt {
     `;
   };
   getCount = (e) => {
-    const t = ye(this.table, this.schema), n = W.object({
-      count: W.number()
+    const t = ye(this.table, this.schema), n = z.object({
+      count: z.number()
     });
     return d.type(n)`
       SELECT COUNT(*)
@@ -2988,7 +2988,7 @@ class rr {
   _database;
   _factory;
   _schema = "public";
-  _validationSchema = W.any();
+  _validationSchema = z.any();
   constructor(e, t, n) {
     this._config = e, this._database = t, n && (this._schema = n);
   }
@@ -3058,7 +3058,7 @@ class rr {
     return this.constructor.TABLE;
   }
   get validationSchema() {
-    return this._validationSchema || W.any();
+    return this._validationSchema || z.any();
   }
   postCreate = async (e) => e;
 }

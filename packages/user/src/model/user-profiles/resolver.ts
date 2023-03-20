@@ -3,8 +3,8 @@ import Service from "./service";
 import type { FilterInput, SortInput } from "@dzangolab/fastify-slonik";
 import type { MercuriusContext } from "mercurius";
 
-// FIXME RL replace any with appropriate type
-const Query: Record<any, any> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Query: Record<string, any> = {
   user: async (
     parent: unknown,
     arguments_: { id: string },

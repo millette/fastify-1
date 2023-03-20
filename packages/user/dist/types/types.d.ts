@@ -11,9 +11,9 @@ interface User extends SupertokensUser {
     profile: UserProfile | null;
     roles: string[];
 }
-interface changePassword {
+interface ChangePasswordInput {
     oldPassword?: string;
     newPassword?: string;
 }
-export type { UserProfile, UserProfileCreateInput, UserProfileUpdateInput, User, changePassword, };
+export type { ChangePasswordInput, UserProfile, UserProfileCreateInput, UserProfileUpdateInput, User, };
 //# sourceMappingURL=types.d.ts.map
