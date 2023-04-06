@@ -83,7 +83,7 @@ const q = (e, s) => {
       }
     };
   };
-}, R = async ({
+}, v = async ({
   fastify: e,
   subject: s,
   templateData: r = {},
@@ -127,7 +127,7 @@ const q = (e, s) => {
     }
     if (r.user.supertokens.sendUserAlreadyExistsWarning && o.status === "EMAIL_ALREADY_EXISTS_ERROR")
       try {
-        await R({
+        await v({
           fastify: s,
           subject: "Duplicate Email Registration",
           templateData: {
@@ -177,7 +177,7 @@ const q = (e, s) => {
       s + "/auth/reset-password",
       i + (e.config.user.supertokens.resetPasswordPath || r)
     );
-    await R({
+    await v({
       fastify: e,
       subject: "Reset Password",
       templateName: "reset-password",
@@ -212,7 +212,7 @@ const q = (e, s) => {
     }
     return i;
   };
-}, V = (e, s) => async (r) => {
+}, j = (e, s) => async (r) => {
   if (e.thirdPartySignInUpPOST === void 0)
     throw new Error("Should never come here");
   const t = await e.thirdPartySignInUpPOST(r);
@@ -234,7 +234,7 @@ const q = (e, s) => {
     };
   }
   return t;
-}, j = (e) => {
+}, V = (e) => {
   const { Apple: s, Facebook: r, Github: t, Google: n } = d, o = e.user.supertokens.providers, i = [], a = [
     { name: "google", initProvider: n },
     { name: "github", initProvider: t },
@@ -250,7 +250,7 @@ const q = (e, s) => {
   required_error: e.required
 }).refine((r) => U.isEmail(r, s || {}), {
   message: e.invalid
-}), v = {
+}), R = {
   minLength: 8,
   minLowercase: 0,
   minUppercase: 0,
@@ -265,7 +265,7 @@ const q = (e, s) => {
   pointsForContainingSymbol: 10
 }, z = (e, s) => {
   const r = {
-    ...v,
+    ...R,
     ...s
   };
   return y.string({
@@ -332,7 +332,7 @@ const q = (e, s) => {
   const r = s.user.password, t = z(
     {
       required: "Password is required",
-      weak: Y({ ...v, ...r })
+      weak: Y({ ...R, ...r })
     },
     r
   ).safeParse(e);
@@ -345,24 +345,30 @@ const q = (e, s) => {
   return {
     override: {
       apis: (r) => {
-        const t = {}, n = s.user.supertokens.thirdPartyEmailPasswordRecipe?.override?.apis;
+        const t = s.user.supertokens.recipes?.thirdPartyEmailPassword;
+        let n;
+        typeof t == "object" && (n = t?.override?.apis);
+        const o = {};
         if (n) {
-          let o;
-          for (o in n)
-            t[o] = n[o](
+          let i;
+          for (i in n) {
+            const a = n[i];
+            a && a(
               r,
               e
+              // eslint-disable-next-line  @typescript-eslint/no-explicit-any
             );
+          }
         }
         return {
           ...r,
           emailPasswordSignUpPOST: H(
             r
           ),
-          thirdPartySignInUpPOST: V(
+          thirdPartySignInUpPOST: j(
             r
           ),
-          ...t
+          ...o
         };
       },
       functions: (r) => ({
@@ -407,13 +413,11 @@ const q = (e, s) => {
         sendEmail: W(e)
       })
     },
-    providers: j(s)
+    providers: V(s)
   };
 }, x = (e) => {
-  const s = e.config.user.supertokens.recipes;
-  return s && s.thirdPartyEmailPassword ? d.init(
-    s.thirdPartyEmailPassword(e)
-  ) : d.init(
+  const s = e.config.user.supertokens.recipes?.thirdPartyEmailPassword;
+  return s && typeof s == "function" ? d.init(s(e)) : d.init(
     Z(e)
   );
 }, ee = () => ({}), se = (e) => {
