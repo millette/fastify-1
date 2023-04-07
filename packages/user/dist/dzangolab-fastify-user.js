@@ -1,8 +1,8 @@
 import "@dzangolab/fastify-mercurius";
 import h from "fastify-plugin";
 import P from "mercurius";
-import b from "mercurius-auth";
-import I from "@fastify/cors";
+import I from "mercurius-auth";
+import b from "@fastify/cors";
 import k from "@fastify/formbody";
 import S from "supertokens-node";
 import { errorHandler as C, plugin as D, wrapResponse as N } from "supertokens-node/framework/fastify";
@@ -15,7 +15,7 @@ import "@dzangolab/fastify-mailer";
 import y from "validator";
 import { z as U } from "zod";
 const $ = h(async (e) => {
-  e.config.mercurius.enabled && e.register(b, {
+  e.config.mercurius.enabled && e.register(I, {
     async applyPolicy(t, r, n, o) {
       if (!o.user) {
         const i = new P.ErrorWithProps("unauthorized");
@@ -170,20 +170,20 @@ const q = (e, s) => {
     s = "";
   }
   return s;
-}, j = (e) => {
-  const s = e.config.appOrigin[0], t = "/reset-password";
-  return async (r) => {
-    const n = r.userContext._default.request.request, o = n.headers.referer || n.headers.origin || n.hostname, i = J(o) || s, a = r.passwordResetLink.replace(
-      s + "/auth/reset-password",
-      i + (e.config.user.supertokens.resetPasswordPath || t)
+}, j = (e, s) => {
+  const t = s.config.appOrigin[0], r = "/reset-password";
+  return async (n) => {
+    const o = n.userContext._default.request.request, i = o.headers.referer || o.headers.origin || o.hostname, a = J(i) || t, c = n.passwordResetLink.replace(
+      t + "/auth/reset-password",
+      a + (s.config.user.supertokens.resetPasswordPath || r)
     );
     await v({
-      fastify: e,
+      fastify: s,
       subject: "Reset Password",
       templateName: "reset-password",
-      to: r.user.email,
+      to: n.user.email,
       templateData: {
-        passwordResetLink: a
+        passwordResetLink: c
       }
     });
   };
@@ -427,11 +427,10 @@ const q = (e, s) => {
       override: (r) => {
         let n;
         typeof t == "object" && (n = t?.emailDelivary);
-        let o = {};
-        return n && (o = n(r, e)), {
+        let o = j;
+        return typeof n == "function" && (o = n), {
           ...r,
-          sendEmail: j(e),
-          ...o
+          sendEmail: o(r, e)
         };
       }
     },
@@ -464,7 +463,7 @@ const q = (e, s) => {
   });
 }, ne = async (e, s, t) => {
   const { config: r, log: n } = e;
-  n.info("Registering supertokens plugin"), te(e), e.setErrorHandler(C()), e.register(I, {
+  n.info("Registering supertokens plugin"), te(e), e.setErrorHandler(C()), e.register(b, {
     origin: r.appOrigin,
     allowedHeaders: [
       "Content-Type",
