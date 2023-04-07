@@ -1,3 +1,5 @@
+import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
+
 import emailPasswordSignIn from "./third-party-email-password/emailPasswordSignIn";
 import emailPasswordSignUp from "./third-party-email-password/emailPasswordSignUp";
 import emailPasswordSignUpPOST from "./third-party-email-password/emailPasswordSignUpPost";
@@ -10,6 +12,7 @@ import validatePassword from "../../../validator/password";
 
 import type {
   APIInterfaceWrapper,
+  EmailDelivaryWrapper,
   RecipeInterfaceWrapper,
   SupertokensRecipes,
 } from "../../types";
@@ -25,12 +28,12 @@ const getThirdPartyEmailPasswordRecipeConfig = (
 ): ThirdPartyEmailPasswordRecipeConfig => {
   const { config } = fastify;
 
+  const thirdPartyEmailPassword: SupertokensRecipes["thirdPartyEmailPassword"] =
+    config.user.supertokens.recipes?.thirdPartyEmailPassword;
+
   return {
     override: {
       apis: (originalImplementation) => {
-        const thirdPartyEmailPassword: SupertokensRecipes["thirdPartyEmailPassword"] =
-          config.user.supertokens.recipes?.thirdPartyEmailPassword;
-
         let apiInterfaceConfig: APIInterfaceWrapper | undefined;
 
         if (typeof thirdPartyEmailPassword === "object") {
@@ -69,9 +72,6 @@ const getThirdPartyEmailPasswordRecipeConfig = (
         };
       },
       functions: (originalImplementation) => {
-        const thirdPartyEmailPassword: SupertokensRecipes["thirdPartyEmailPassword"] =
-          config.user.supertokens.recipes?.thirdPartyEmailPassword;
-
         let recipeInterfaceConfig: RecipeInterfaceWrapper | undefined;
 
         if (typeof thirdPartyEmailPassword === "object") {
@@ -140,9 +140,23 @@ const getThirdPartyEmailPasswordRecipeConfig = (
     },
     emailDelivery: {
       override: (originalImplementation) => {
+        let emailDelivaryConfig: EmailDelivaryWrapper | undefined;
+
+        if (typeof thirdPartyEmailPassword === "object") {
+          emailDelivaryConfig = thirdPartyEmailPassword?.emailDelivary;
+        }
+
+        let emailDelivary: Partial<typeof ThirdPartyEmailPassword.sendEmail> =
+          {};
+
+        if (emailDelivaryConfig) {
+          emailDelivary = emailDelivaryConfig(originalImplementation, fastify);
+        }
+
         return {
           ...originalImplementation,
           sendEmail: sendEmail(fastify),
+          ...emailDelivary,
         };
       },
     },
