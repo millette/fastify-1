@@ -1,7 +1,7 @@
-import { EmailDeliveryInterface } from "supertokens-node/lib/build/ingredients/emaildelivery/types";
-import { TypeEmailPasswordPasswordResetEmailDeliveryInput } from "supertokens-node/lib/build/recipe/emailpassword/types";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 import type { FastifyInstance } from "fastify";
+import type { EmailDeliveryInterface } from "supertokens-node/lib/build/ingredients/emaildelivery/types";
+import type { TypeEmailPasswordPasswordResetEmailDeliveryInput } from "supertokens-node/lib/build/recipe/emailpassword/types";
 import type { TypeInput as SessionRecipeConfig } from "supertokens-node/recipe/session/types";
 import type { TypeInput as ThirdPartyEmailPasswordRecipeConfig, APIInterface, RecipeInterface } from "supertokens-node/recipe/thirdpartyemailpassword/types";
 import type { TypeInput as UserRolesRecipeConfig } from "supertokens-node/recipe/userroles/types";
@@ -9,7 +9,7 @@ declare const Apple: typeof import("supertokens-node/lib/build/recipe/thirdparty
 type APIInterfaceWrapper = {
     [key in keyof APIInterface]?: (originalImplementation: APIInterface, fastify: FastifyInstance) => APIInterface[key];
 };
-type EmailDelivaryWrapper = (originalImplementation: EmailDeliveryInterface<TypeEmailPasswordPasswordResetEmailDeliveryInput>, fastify: FastifyInstance) => typeof ThirdPartyEmailPassword.sendEmail;
+type SendEmailWrapper = (originalImplementation: EmailDeliveryInterface<TypeEmailPasswordPasswordResetEmailDeliveryInput>, fastify: FastifyInstance) => typeof ThirdPartyEmailPassword.sendEmail;
 type RecipeInterfaceWrapper = {
     [key in keyof RecipeInterface]?: (originalImplementation: RecipeInterface, fastify: FastifyInstance) => RecipeInterface[key];
 };
@@ -29,7 +29,7 @@ interface ThirdPartyEmailPasswordRecipe {
         apis?: APIInterfaceWrapper;
         function?: RecipeInterfaceWrapper;
     };
-    emailDelivary?: EmailDelivaryWrapper;
+    sendEmail?: SendEmailWrapper;
 }
 interface SupertokensConfig {
     connectionUri: string;
@@ -38,5 +38,5 @@ interface SupertokensConfig {
     resetPasswordPath?: string;
     sendUserAlreadyExistsWarning?: boolean;
 }
-export type { APIInterfaceWrapper, EmailDelivaryWrapper, RecipeInterfaceWrapper, SupertokensConfig, SupertokensRecipes, };
+export type { APIInterfaceWrapper, RecipeInterfaceWrapper, SendEmailWrapper, SupertokensConfig, SupertokensRecipes, };
 //# sourceMappingURL=types.d.ts.map

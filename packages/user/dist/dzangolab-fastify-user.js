@@ -1,11 +1,11 @@
 import "@dzangolab/fastify-mercurius";
 import h from "fastify-plugin";
 import P from "mercurius";
-import I from "mercurius-auth";
-import b from "@fastify/cors";
+import b from "mercurius-auth";
+import I from "@fastify/cors";
 import k from "@fastify/formbody";
 import S from "supertokens-node";
-import { errorHandler as C, plugin as D, wrapResponse as N } from "supertokens-node/framework/fastify";
+import { errorHandler as C, plugin as N, wrapResponse as D } from "supertokens-node/framework/fastify";
 import { verifySession as T } from "supertokens-node/recipe/session/framework/fastify";
 import w from "supertokens-node/recipe/session";
 import d, { getUserByThirdPartyInfo as L } from "supertokens-node/recipe/thirdpartyemailpassword";
@@ -15,7 +15,7 @@ import "@dzangolab/fastify-mailer";
 import y from "validator";
 import { z as U } from "zod";
 const $ = h(async (e) => {
-  e.config.mercurius.enabled && e.register(I, {
+  e.config.mercurius.enabled && e.register(b, {
     async applyPolicy(t, r, n, o) {
       if (!o.user) {
         const i = new P.ErrorWithProps("unauthorized");
@@ -328,7 +328,7 @@ const q = (e, s) => {
     t.length > 0 && (s += t.join(", ") + " and "), s += r;
   }
   return s;
-}, O = (e, s) => {
+}, E = (e, s) => {
   const t = s.user.password, r = z(
     {
       required: "Password is required",
@@ -345,14 +345,13 @@ const q = (e, s) => {
   return {
     override: {
       apis: (r) => {
-        let n;
-        typeof t == "object" && (n = t?.override?.apis);
-        const o = {};
-        if (n) {
+        const n = {};
+        if (typeof t == "object" && t.override?.apis) {
+          const o = t.override.apis;
           let i;
-          for (i in n) {
-            const a = n[i];
-            a && (o[i] = a(
+          for (i in o) {
+            const a = o[i];
+            a && (n[i] = a(
               r,
               e
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -367,18 +366,17 @@ const q = (e, s) => {
           thirdPartySignInUpPOST: G(
             r
           ),
-          ...o
+          ...n
         };
       },
       functions: (r) => {
-        let n;
-        typeof t == "object" && (n = t?.override?.function);
-        const o = {};
-        if (n) {
+        const n = {};
+        if (typeof t == "object" && t.override?.function) {
+          const o = t.override.function;
           let i;
-          for (i in n) {
-            const a = n[i];
-            a && (o[i] = a(
+          for (i in o) {
+            const a = o[i];
+            a && (n[i] = a(
               r,
               e
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -399,7 +397,7 @@ const q = (e, s) => {
             r,
             e
           ),
-          ...o
+          ...n
         };
       }
     },
@@ -416,7 +414,7 @@ const q = (e, s) => {
         {
           id: "password",
           validate: async (r) => {
-            const n = O(r, s);
+            const n = E(r, s);
             if (!n.success)
               return n.message;
           }
@@ -426,11 +424,9 @@ const q = (e, s) => {
     emailDelivery: {
       override: (r) => {
         let n;
-        typeof t == "object" && (n = t?.emailDelivary);
-        let o = j;
-        return typeof n == "function" && (o = n), {
+        return typeof t == "object" && typeof t?.sendEmail == "function" && (n = t.sendEmail), {
           ...r,
-          sendEmail: o(r, e)
+          sendEmail: n ? n(r, e) : j(r, e)
         };
       }
     },
@@ -463,7 +459,7 @@ const q = (e, s) => {
   });
 }, ne = async (e, s, t) => {
   const { config: r, log: n } = e;
-  n.info("Registering supertokens plugin"), te(e), e.setErrorHandler(C()), e.register(b, {
+  n.info("Registering supertokens plugin"), te(e), e.setErrorHandler(C()), e.register(I, {
     origin: r.appOrigin,
     allowedHeaders: [
       "Content-Type",
@@ -471,9 +467,9 @@ const q = (e, s) => {
       ...S.getAllCORSHeaders()
     ],
     credentials: !0
-  }), e.register(k), e.register(D), n.info("Registering supertokens plugin complete"), e.decorate("verifySession", T), t();
+  }), e.register(k), e.register(N), n.info("Registering supertokens plugin complete"), e.decorate("verifySession", T), t();
 }, oe = h(ne), ie = async (e, s, t) => {
-  const { config: r, slonik: n } = s, i = (await w.getSession(s, N(t), {
+  const { config: r, slonik: n } = s, i = (await w.getSession(s, D(t), {
     sessionRequired: !1
   }))?.getUserId();
   if (i) {
@@ -533,7 +529,7 @@ class f {
     this.config = s, this.database = t;
   }
   changePassword = async (s, t, r) => {
-    const n = O(r, this.config);
+    const n = E(r, this.config);
     if (!n.success)
       return {
         status: "FIELD_ERROR",
@@ -623,7 +619,7 @@ const ue = {
       return n.statusCode = 500, n;
     }
   }
-}, De = { Mutation: ue, Query: de }, Ne = async (e, s, t) => {
+}, Ne = { Mutation: ue, Query: de }, De = async (e, s, t) => {
   const r = "/change_password", n = "/me";
   e.post(
     r,
@@ -635,12 +631,12 @@ const ue = {
         const a = o.session, c = o.body, u = a && a.getUserId();
         if (!u)
           throw new Error("User not found in session");
-        const g = c.oldPassword ?? "", m = c.newPassword ?? "", E = await new f(o.config, o.slonik).changePassword(
+        const g = c.oldPassword ?? "", m = c.newPassword ?? "", O = await new f(o.config, o.slonik).changePassword(
           u,
           g,
           m
         );
-        i.send(E);
+        i.send(O);
       } catch (a) {
         e.log.error(a), i.status(500), i.send({
           status: "ERROR",
@@ -669,6 +665,6 @@ export {
   ae as default,
   ke as userProfileResolver,
   Ce as userProfileRoutes,
-  De as userResolver,
-  Ne as userRoutes
+  Ne as userResolver,
+  De as userRoutes
 };
