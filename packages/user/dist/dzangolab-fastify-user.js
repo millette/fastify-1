@@ -12,8 +12,8 @@ import d, { getUserByThirdPartyInfo as L } from "supertokens-node/recipe/thirdpa
 import l from "supertokens-node/recipe/userroles";
 import { DefaultSqlFactory as F, BaseService as _ } from "@dzangolab/fastify-slonik";
 import "@dzangolab/fastify-mailer";
-import U from "validator";
-import { z as y } from "zod";
+import y from "validator";
+import { z as U } from "zod";
 const $ = h(async (e) => {
   e.config.mercurius.enabled && e.register(I, {
     async applyPolicy(r, t, n, o) {
@@ -187,7 +187,7 @@ const q = (e, s) => {
       }
     });
   };
-}, G = (e, s) => {
+}, j = (e, s) => {
   const { config: r, log: t } = s;
   return async (n) => {
     if (!await L(
@@ -212,7 +212,7 @@ const q = (e, s) => {
     }
     return i;
   };
-}, j = (e, s) => async (r) => {
+}, G = (e, s) => async (r) => {
   if (e.thirdPartySignInUpPOST === void 0)
     throw new Error("Should never come here");
   const t = await e.thirdPartySignInUpPOST(r);
@@ -246,9 +246,9 @@ const q = (e, s) => {
       c.initProvider(o[c.name])
     );
   return i;
-}, Q = (e, s) => y.string({
+}, Q = (e, s) => U.string({
   required_error: e.required
-}).refine((r) => U.isEmail(r, s || {}), {
+}).refine((r) => y.isEmail(r, s || {}), {
   message: e.invalid
 }), R = {
   minLength: 8,
@@ -268,10 +268,10 @@ const q = (e, s) => {
     ...R,
     ...s
   };
-  return y.string({
+  return U.string({
     required_error: e.required
   }).refine(
-    (t) => U.isStrongPassword(
+    (t) => y.isStrongPassword(
       t,
       r
     ),
@@ -328,7 +328,7 @@ const q = (e, s) => {
     r.length > 0 && (s += r.join(", ") + " and "), s += t;
   }
   return s;
-}, O = (e, s) => {
+}, E = (e, s) => {
   const r = s.user.password, t = z(
     {
       required: "Password is required",
@@ -353,11 +353,11 @@ const q = (e, s) => {
           let i;
           for (i in n) {
             const a = n[i];
-            a && a(
+            a && (o[i] = a(
               r,
               e
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-            );
+            ));
           }
         }
         return {
@@ -365,27 +365,45 @@ const q = (e, s) => {
           emailPasswordSignUpPOST: H(
             r
           ),
-          thirdPartySignInUpPOST: j(
+          thirdPartySignInUpPOST: G(
             r
           ),
           ...o
         };
       },
-      functions: (r) => ({
-        ...r,
-        emailPasswordSignIn: q(
-          r,
-          e
-        ),
-        emailPasswordSignUp: M(
-          r,
-          e
-        ),
-        thirdPartySignInUp: G(
-          r,
-          e
-        )
-      })
+      functions: (r) => {
+        const t = s.user.supertokens.recipes?.thirdPartyEmailPassword;
+        let n;
+        typeof t == "object" && (n = t?.override?.function);
+        const o = {};
+        if (n) {
+          let i;
+          for (i in n) {
+            const a = n[i];
+            a && (o[i] = a(
+              r,
+              e
+              // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+            ));
+          }
+        }
+        return {
+          ...r,
+          emailPasswordSignIn: q(
+            r,
+            e
+          ),
+          emailPasswordSignUp: M(
+            r,
+            e
+          ),
+          thirdPartySignInUp: j(
+            r,
+            e
+          ),
+          ...o
+        };
+      }
     },
     signUpFeature: {
       formFields: [
@@ -400,7 +418,7 @@ const q = (e, s) => {
         {
           id: "password",
           validate: async (r) => {
-            const t = O(r, s);
+            const t = E(r, s);
             if (!t.success)
               return t.message;
           }
@@ -512,7 +530,7 @@ class f {
     this.config = s, this.database = r;
   }
   changePassword = async (s, r, t) => {
-    const n = O(t, this.config);
+    const n = E(t, this.config);
     if (!n.success)
       return {
         status: "FIELD_ERROR",
@@ -614,12 +632,12 @@ const ue = {
         const a = o.session, c = o.body, u = a && a.getUserId();
         if (!u)
           throw new Error("User not found in session");
-        const g = c.oldPassword ?? "", m = c.newPassword ?? "", E = await new f(o.config, o.slonik).changePassword(
+        const g = c.oldPassword ?? "", m = c.newPassword ?? "", O = await new f(o.config, o.slonik).changePassword(
           u,
           g,
           m
         );
-        i.send(E);
+        i.send(O);
       } catch (a) {
         e.log.error(a), i.status(500), i.send({
           status: "ERROR",

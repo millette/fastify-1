@@ -1,10 +1,13 @@
 import type { FastifyInstance } from "fastify";
 import type { TypeInput as SessionRecipeConfig } from "supertokens-node/recipe/session/types";
-import type { TypeInput as ThirdPartyEmailPasswordRecipeConfig, APIInterface } from "supertokens-node/recipe/thirdpartyemailpassword/types";
+import type { TypeInput as ThirdPartyEmailPasswordRecipeConfig, APIInterface, RecipeInterface } from "supertokens-node/recipe/thirdpartyemailpassword/types";
 import type { TypeInput as UserRolesRecipeConfig } from "supertokens-node/recipe/userroles/types";
 declare const Apple: typeof import("supertokens-node/lib/build/recipe/thirdparty/providers/apple").default, Facebook: typeof import("supertokens-node/lib/build/recipe/thirdparty/providers/facebook").default, Github: typeof import("supertokens-node/lib/build/recipe/thirdparty/providers/github").default, Google: typeof import("supertokens-node/lib/build/recipe/thirdparty/providers/google").default;
 type APIInterfaceWrapper = {
     [key in keyof APIInterface]?: (originalImplementation: APIInterface, fastify: FastifyInstance) => APIInterface[key];
+};
+type RecipeInterfaceWrapper = {
+    [key in keyof RecipeInterface]?: (originalImplementation: RecipeInterface, fastify: FastifyInstance) => RecipeInterface[key];
 };
 interface SupertokensRecipes {
     session?: (fastify: FastifyInstance) => SessionRecipeConfig;
@@ -20,6 +23,7 @@ interface SupertokensThirdPartyProvider {
 interface ThirdPartyEmailPasswordRecipe {
     override?: {
         apis?: APIInterfaceWrapper;
+        function?: RecipeInterfaceWrapper;
     };
 }
 interface SupertokensConfig {
@@ -29,5 +33,5 @@ interface SupertokensConfig {
     resetPasswordPath?: string;
     sendUserAlreadyExistsWarning?: boolean;
 }
-export type { APIInterfaceWrapper, SupertokensConfig, SupertokensRecipes };
+export type { APIInterfaceWrapper, RecipeInterfaceWrapper, SupertokensConfig, SupertokensRecipes, };
 //# sourceMappingURL=types.d.ts.map
