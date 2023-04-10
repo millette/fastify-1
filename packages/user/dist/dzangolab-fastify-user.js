@@ -434,7 +434,7 @@ const q = (e, s) => {
   };
 }, x = (e) => {
   const s = e.config.user.supertokens.recipes?.thirdPartyEmailPassword;
-  return s && typeof s == "function" ? d.init(s(e)) : d.init(
+  return typeof s == "function" ? d.init(s(e)) : d.init(
     Z(e)
   );
 }, ee = () => ({}), se = (e) => {
