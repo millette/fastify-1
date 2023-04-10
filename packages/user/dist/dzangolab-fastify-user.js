@@ -46,7 +46,7 @@ const $ = h(async (e) => {
 class K extends F {
   /* eslint-enabled */
 }
-class p extends _ {
+class g extends _ {
   /* eslint-enabled */
   static LIMIT_DEFAULT = 20;
   static LIMIT_MAX = 50;
@@ -67,7 +67,7 @@ const q = (e, s) => {
     );
     if (o.status !== "OK")
       return o;
-    const i = new p(t, r);
+    const i = new g(t, r);
     let a = null;
     try {
       a = await i.findById(o.user.id);
@@ -170,7 +170,7 @@ const q = (e, s) => {
     s = "";
   }
   return s;
-}, j = (e, s) => {
+}, W = (e, s) => {
   const t = s.config.appOrigin[0], r = "/reset-password";
   return async (n) => {
     const o = n.userContext._default.request.request, i = o.headers.referer || o.headers.origin || o.hostname, a = J(i) || t, c = n.passwordResetLink.replace(
@@ -187,7 +187,7 @@ const q = (e, s) => {
       }
     });
   };
-}, W = (e, s) => {
+}, j = (e, s) => {
   const { config: t, log: r } = s;
   return async (n) => {
     if (!await L(
@@ -393,7 +393,7 @@ const q = (e, s) => {
             r,
             e
           ),
-          thirdPartySignInUp: W(
+          thirdPartySignInUp: j(
             r,
             e
           ),
@@ -426,7 +426,7 @@ const q = (e, s) => {
         let n;
         return typeof t == "object" && typeof t?.sendEmail == "function" && (n = t.sendEmail), {
           ...r,
-          sendEmail: n ? n(r, e) : j(r, e)
+          sendEmail: n ? n(r, e) : W(r, e)
         };
       }
     },
@@ -473,10 +473,10 @@ const q = (e, s) => {
     sessionRequired: !1
   }))?.getUserId();
   if (i) {
-    const a = new p(r, n), c = await d.getUserById(i);
+    const a = new g(r, n), c = await d.getUserById(i);
     if (c) {
       let u = null;
-      const { roles: g } = await l.getRolesForUser(i);
+      const { roles: p } = await l.getRolesForUser(i);
       try {
         u = await a.findById(i);
       } catch {
@@ -484,7 +484,7 @@ const q = (e, s) => {
       const m = {
         ...c,
         profile: u,
-        roles: g
+        roles: p
       };
       e.user = m;
     }
@@ -497,8 +497,8 @@ const q = (e, s) => {
 );
 ae.updateContext = ie;
 const ce = {
-  user: async (e, s, t) => await new p(t.config, t.database).findById(s.id),
-  users: async (e, s, t) => await new p(t.config, t.database).list(
+  user: async (e, s, t) => await new g(t.config, t.database).findById(s.id),
+  users: async (e, s, t) => await new g(t.config, t.database).list(
     s.limit,
     s.offset,
     s.filters ? JSON.parse(JSON.stringify(s.filters)) : void 0,
@@ -512,11 +512,11 @@ const ce = {
       preHandler: e.verifySession()
     },
     async (n, o) => {
-      const i = new p(n.config, n.slonik), { limit: a, offset: c, filters: u, sort: g } = n.query, m = await i.list(
+      const i = new g(n.config, n.slonik), { limit: a, offset: c, filters: u, sort: p } = n.query, m = await i.list(
         a,
         c,
         u ? JSON.parse(u) : void 0,
-        g ? JSON.parse(g) : void 0
+        p ? JSON.parse(p) : void 0
       );
       o.send(m);
     }
@@ -570,7 +570,7 @@ class f {
       };
   };
   getUserById = async (s) => {
-    const t = await d.getUserById(s), r = new p(this.config, this.database);
+    const t = await d.getUserById(s), r = new g(this.config, this.database);
     let n = null;
     try {
       n = await r.findById(s);
@@ -631,9 +631,9 @@ const ue = {
         const a = o.session, c = o.body, u = a && a.getUserId();
         if (!u)
           throw new Error("User not found in session");
-        const g = c.oldPassword ?? "", m = c.newPassword ?? "", O = await new f(o.config, o.slonik).changePassword(
+        const p = c.oldPassword ?? "", m = c.newPassword ?? "", O = await new f(o.config, o.slonik).changePassword(
           u,
-          g,
+          p,
           m
         );
         i.send(O);
@@ -660,7 +660,7 @@ const ue = {
   ), t();
 };
 export {
-  p as UserProfileService,
+  g as UserProfileService,
   f as UserService,
   ae as default,
   ke as userProfileResolver,
