@@ -5,7 +5,7 @@ import b from "mercurius-auth";
 import I from "@fastify/cors";
 import k from "@fastify/formbody";
 import S from "supertokens-node";
-import { errorHandler as C, plugin as N, wrapResponse as D } from "supertokens-node/framework/fastify";
+import { errorHandler as N, plugin as C, wrapResponse as D } from "supertokens-node/framework/fastify";
 import { verifySession as T } from "supertokens-node/recipe/session/framework/fastify";
 import w from "supertokens-node/recipe/session";
 import d, { getUserByThirdPartyInfo as L } from "supertokens-node/recipe/thirdpartyemailpassword";
@@ -459,7 +459,7 @@ const q = (e, s) => {
   });
 }, ne = async (e, s, t) => {
   const { config: r, log: n } = e;
-  n.info("Registering supertokens plugin"), te(e), e.setErrorHandler(C()), e.register(I, {
+  n.info("Registering supertokens plugin"), te(e), e.setErrorHandler(N()), e.register(I, {
     origin: r.appOrigin,
     allowedHeaders: [
       "Content-Type",
@@ -467,7 +467,7 @@ const q = (e, s) => {
       ...S.getAllCORSHeaders()
     ],
     credentials: !0
-  }), e.register(k), e.register(N), n.info("Registering supertokens plugin complete"), e.decorate("verifySession", T), t();
+  }), e.register(k), e.register(C), n.info("Registering supertokens plugin complete"), e.decorate("verifySession", T), t();
 }, oe = h(ne), ie = async (e, s, t) => {
   const { config: r, slonik: n } = s, i = (await w.getSession(s, D(t), {
     sessionRequired: !1
@@ -504,7 +504,7 @@ const ce = {
     s.filters ? JSON.parse(JSON.stringify(s.filters)) : void 0,
     s.sort ? JSON.parse(JSON.stringify(s.sort)) : void 0
   )
-}, ke = { Query: ce }, Ce = async (e, s, t) => {
+}, ke = { Query: ce }, Ne = async (e, s, t) => {
   const r = "/users";
   e.get(
     r,
@@ -619,7 +619,7 @@ const ue = {
       return n.statusCode = 500, n;
     }
   }
-}, Ne = { Mutation: ue, Query: de }, De = async (e, s, t) => {
+}, Ce = { Mutation: ue, Query: de }, De = async (e, s, t) => {
   const r = "/change_password", n = "/me";
   e.post(
     r,
@@ -664,7 +664,7 @@ export {
   f as UserService,
   ae as default,
   ke as userProfileResolver,
-  Ce as userProfileRoutes,
-  Ne as userResolver,
+  Ne as userProfileRoutes,
+  Ce as userResolver,
   De as userRoutes
 };
