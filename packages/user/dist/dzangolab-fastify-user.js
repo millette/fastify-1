@@ -371,8 +371,8 @@ const q = (e, s) => {
       },
       functions: (r) => {
         const n = {};
-        if (typeof t == "object" && t.override?.function) {
-          const o = t.override.function;
+        if (typeof t == "object" && t.override?.functions) {
+          const o = t.override.functions;
           let i;
           for (i in o) {
             const a = o[i];
