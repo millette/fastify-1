@@ -44,6 +44,7 @@
     "mercurius": "12.2.0",
     "prettier": "2.8.7",
     "slonik": "33.1.4",
+    "supertokens-node": "12.1.6",
     "tsconfig": "0.30.0",
     "typescript": "4.9.5",
     "vite": "4.2.1",
@@ -59,6 +60,7 @@
     "fastify-plugin": ">=4.3.0",
     "mercurius": ">=12.2.0",
     "slonik": ">=33.1.4",
+    "supertokens-node": ">=12.1.6",
     "zod": ">=3.21.4"
   },
   "engines": {

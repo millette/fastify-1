@@ -2,6 +2,7 @@ import "@dzangolab/fastify-mercurius";
 
 import type { SupertokensConfig } from "./supertokens";
 import type { IsEmailOptions, StrongPasswordOptions, User } from "./types";
+import { TypeInput } from "supertokens-node/types";
 
 declare module "mercurius" {
   interface MercuriusContext {
@@ -21,6 +22,9 @@ declare module "@dzangolab/fastify-config" {
         signUp?: boolean;
       };
       role?: string;
+      transformer: {
+        input: (input: TypeInput )=> TypeInput
+      }
     };
   }
 }

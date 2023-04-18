@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => {
           ...Object.keys(dependencies),
           ...Object.keys(peerDependencies),
           "node:fs",
+          /supertokens-node+/,
         ],
         output: {
           exports: "named",
@@ -37,6 +38,14 @@ export default defineConfig(({ mode }) => {
             "node:fs": "NodeFs",
             pg: "Pg",
             slonik: "Slonik",
+            "supertokens-node": "SupertokensNode",
+            "supertokens-node/framework/fastify": "SupertokensFastify",
+            "supertokens-node/recipe/session/framework/fastify":
+              "SupertokensSessionFastify",
+            "supertokens-node/recipe/session": "SupertokensSession",
+            "supertokens-node/recipe/thirdpartyemailpassword":
+              "SupertokensThirdPartyEmailPassword",
+            "supertokens-node/recipe/userroles": "SupertokensUserRoles",
             zod: "Zod",
           },
         },
