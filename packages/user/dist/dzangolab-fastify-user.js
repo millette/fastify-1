@@ -8,9 +8,9 @@ import v from "supertokens-node";
 import { errorHandler as N, plugin as _, wrapResponse as $ } from "supertokens-node/framework/fastify";
 import { verifySession as T } from "supertokens-node/recipe/session/framework/fastify";
 import f from "supertokens-node/recipe/session";
-import d, { getUserByThirdPartyInfo as A } from "supertokens-node/recipe/thirdpartyemailpassword";
+import l, { getUserByThirdPartyInfo as A } from "supertokens-node/recipe/thirdpartyemailpassword";
 import { DefaultSqlFactory as y, BaseService as E } from "@dzangolab/fastify-slonik";
-import g from "supertokens-node/recipe/userroles";
+import p from "supertokens-node/recipe/userroles";
 import "@dzangolab/fastify-mailer";
 import R from "validator";
 import { z as b } from "zod";
@@ -114,7 +114,7 @@ const H = (e, s) => {
         ...i.user,
         ...o
       };
-      const u = await g.addRoleToUser(
+      const u = await p.addRoleToUser(
         i.user.id,
         r.user.role || "USER"
       );
@@ -257,7 +257,7 @@ const H = (e, s) => {
   for (const t of X(e))
     r.has(t.id) || s.push(t);
   return s;
-}, x = (e) => {
+}, Q = (e) => {
   let s;
   try {
     if (s = new URL(e).origin, !s || s === "null")
@@ -266,10 +266,10 @@ const H = (e, s) => {
     s = "";
   }
   return s;
-}, Q = (e, s) => {
+}, Y = (e, s) => {
   const r = s.config.appOrigin[0], t = "/reset-password";
   return async (n) => {
-    const a = n.userContext._default.request.request, i = a.headers.referer || a.headers.origin || a.hostname, c = x(i) || r, o = n.passwordResetLink.replace(
+    const a = n.userContext._default.request.request, i = a.headers.referer || a.headers.origin || a.hostname, c = Q(i) || r, o = n.passwordResetLink.replace(
       r + "/auth/reset-password",
       c + (s.config.user.supertokens.resetPasswordPath || t)
     );
@@ -283,30 +283,30 @@ const H = (e, s) => {
       }
     });
   };
-}, Y = (e, s) => {
-  const { config: r, log: t, slonik: n } = s;
-  return async (a) => {
+}, x = (e, s) => {
+  const { config: r, log: t } = s;
+  return async (n) => {
     if (!await A(
-      a.thirdPartyId,
-      a.thirdPartyUserId,
-      a.userContext
+      n.thirdPartyId,
+      n.thirdPartyUserId,
+      n.userContext
     ) && r.user.features?.signUp === !1)
       throw {
         name: "SIGN_UP_DISABLED",
         message: "SignUp feature is currently disabled",
         statusCode: 404
       };
-    const c = await e.thirdPartySignInUp(
-      a
+    const i = await e.thirdPartySignInUp(
+      n
     );
-    if (c.status === "OK" && c.createdNewUser) {
-      const o = await g.addRoleToUser(
-        c.user.id,
+    if (i.status === "OK" && i.createdNewUser) {
+      const c = await p.addRoleToUser(
+        i.user.id,
         r.user.role || "USER"
       );
-      o.status !== "OK" && t.error(o.status);
+      c.status !== "OK" && t.error(c.status);
     }
-    return c;
+    return i;
   };
 }, Z = (e, s) => {
   const { config: r, log: t, slonik: n } = s;
@@ -336,7 +336,7 @@ const H = (e, s) => {
     return i;
   };
 }, ee = (e) => {
-  const { Apple: s, Facebook: r, Github: t, Google: n } = d, a = e.user.supertokens.providers, i = [], c = [
+  const { Apple: s, Facebook: r, Github: t, Google: n } = l, a = e.user.supertokens.providers, i = [], c = [
     { name: "google", initProvider: n },
     { name: "github", initProvider: t },
     { name: "facebook", initProvider: r },
@@ -404,7 +404,7 @@ const H = (e, s) => {
             t,
             e
           ),
-          thirdPartySignInUp: Y(
+          thirdPartySignInUp: x(
             t,
             e
           ),
@@ -420,7 +420,7 @@ const H = (e, s) => {
         let n;
         return r?.sendEmail && (n = r.sendEmail), {
           ...t,
-          sendEmail: n ? n(t, e) : Q(t, e)
+          sendEmail: n ? n(t, e) : Y(t, e)
         };
       }
     },
@@ -428,12 +428,12 @@ const H = (e, s) => {
   };
 }, re = (e) => {
   const s = e.config.user.supertokens.recipes?.thirdPartyEmailPassword;
-  return typeof s == "function" ? d.init(s(e)) : d.init(
+  return typeof s == "function" ? l.init(s(e)) : l.init(
     se(e)
   );
 }, te = () => ({}), ie = (e) => {
   const s = e.config.user.supertokens.recipes;
-  return s && s.userRoles ? g.init(s.userRoles(e)) : g.init(te());
+  return s && s.userRoles ? p.init(s.userRoles(e)) : p.init(te());
 }, ne = (e) => [
   q(e),
   re(e),
@@ -467,23 +467,16 @@ const H = (e, s) => {
     sessionRequired: !1
   }))?.getUserId();
   if (i) {
-    const c = new h(t, n), o = await d.getUserById(i);
-    if (o) {
-      let u = null;
-      const { roles: p } = await g.getRolesForUser(i);
-      try {
-        u = await c.findById(i);
-      } catch {
-      }
-      if (!u)
-        throw new Error("Unable to find user profile");
-      const m = {
-        ...o,
-        profile: u,
-        roles: p
-      };
-      e.user = m;
+    const c = new h(t, n);
+    let o = null;
+    try {
+      o = await c.findById(i);
+    } catch {
     }
+    if (!o)
+      throw new Error("Unable to find user");
+    const { roles: u } = await p.getRolesForUser(i);
+    e.user = o, e.roles = u;
   }
 }, de = P(
   async (e, s, r) => {
@@ -495,7 +488,7 @@ de.updateContext = ue;
 class le extends y {
   /* eslint-enabled */
 }
-class l extends E {
+class d extends E {
   constructor(s, r) {
     super(s, r);
   }
@@ -517,14 +510,14 @@ class l extends E {
         status: "FIELD_ERROR",
         message: n.message
       };
-    const a = await d.getUserById(s);
+    const a = await l.getUserById(s);
     if (r && t)
       if (a)
-        if ((await d.emailPasswordSignIn(
+        if ((await l.emailPasswordSignIn(
           a.email,
           r
         )).status === "OK") {
-          if (await d.updateEmailOrPassword({
+          if (await l.updateEmailOrPassword({
             userId: s,
             password: t
           }))
@@ -554,7 +547,7 @@ class l extends E {
 }
 const pe = {
   changePassword: async (e, s, r) => {
-    const t = new l(r.config, r.database);
+    const t = new d(r.config, r.database);
     try {
       return r.user?.id ? await t.changePassword(
         r.user?.id,
@@ -574,7 +567,7 @@ const pe = {
   }
 }, me = {
   me: async (e, s, r) => {
-    const t = new l(r.config, r.database);
+    const t = new d(r.config, r.database);
     if (r.user?.id)
       return t.findById(r.user.id);
     {
@@ -587,8 +580,8 @@ const pe = {
       return n.statusCode = 500, n;
     }
   },
-  user: async (e, s, r) => await new l(r.config, r.database).findById(s.id),
-  users: async (e, s, r) => await new l(r.config, r.database).list(
+  user: async (e, s, r) => await new d(r.config, r.database).findById(s.id),
+  users: async (e, s, r) => await new d(r.config, r.database).list(
     s.limit,
     s.offset,
     s.filters ? JSON.parse(JSON.stringify(s.filters)) : void 0,
@@ -602,10 +595,10 @@ const pe = {
       preHandler: e.verifySession()
     },
     async (i, c) => {
-      const o = new l(i.config, i.slonik), { limit: u, offset: p, filters: m, sort: w } = i.query, U = await o.list(
+      const o = new d(i.config, i.slonik), { limit: u, offset: m, filters: g, sort: w } = i.query, U = await o.list(
         u,
-        p,
-        m ? JSON.parse(m) : void 0,
+        m,
+        g ? JSON.parse(g) : void 0,
         w ? JSON.parse(w) : void 0
       );
       c.send(U);
@@ -617,12 +610,12 @@ const pe = {
     },
     async (i, c) => {
       try {
-        const o = i.session, u = i.body, p = o && o.getUserId();
-        if (!p)
+        const o = i.session, u = i.body, m = o && o.getUserId();
+        if (!m)
           throw new Error("User not found in session");
-        const m = u.oldPassword ?? "", w = u.newPassword ?? "", F = await new l(i.config, i.slonik).changePassword(
-          p,
+        const g = u.oldPassword ?? "", w = u.newPassword ?? "", F = await new d(i.config, i.slonik).changePassword(
           m,
+          g,
           w
         );
         c.send(F);
@@ -640,7 +633,7 @@ const pe = {
       preHandler: e.verifySession()
     },
     async (i, c) => {
-      const o = new l(i.config, i.slonik), u = i.session?.getUserId();
+      const o = new d(i.config, i.slonik), u = i.session?.getUserId();
       if (u)
         c.send(await o.findById(u));
       else
@@ -649,7 +642,7 @@ const pe = {
   ), r();
 };
 export {
-  l as UserService,
+  d as UserService,
   de as default,
   Le as userResolver,
   Ce as userRoutes
