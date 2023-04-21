@@ -33,12 +33,16 @@ const emailPasswordSignIn = (
 
     let user: User | null | undefined;
 
-    user = await userService.findById(originalResponse.user.id);
-
-    if (!user) {
+    try {
+      user = await userService.update(originalResponse.user.id, {
+        last_login_at: Date.now(),
+      });
+    } catch {
       user = await userService.create({
         id: originalResponse.user.id,
         email: originalResponse.user.email,
+        signed_up_at: originalResponse.user.timeJoined,
+        last_login_at: originalResponse.user.timeJoined,
       });
 
       if (!user) {
