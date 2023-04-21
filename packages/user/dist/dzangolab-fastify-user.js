@@ -1,11 +1,11 @@
 import "@dzangolab/fastify-mercurius";
 import P from "fastify-plugin";
 import S from "mercurius";
-import D from "mercurius-auth";
-import L from "@fastify/cors";
-import C from "@fastify/formbody";
+import F from "mercurius-auth";
+import D from "@fastify/cors";
+import L from "@fastify/formbody";
 import v from "supertokens-node";
-import { errorHandler as N, plugin as _, wrapResponse as $ } from "supertokens-node/framework/fastify";
+import { errorHandler as N, plugin as C, wrapResponse as $ } from "supertokens-node/framework/fastify";
 import { verifySession as T } from "supertokens-node/recipe/session/framework/fastify";
 import f from "supertokens-node/recipe/session";
 import l, { getUserByThirdPartyInfo as A } from "supertokens-node/recipe/thirdpartyemailpassword";
@@ -14,12 +14,12 @@ import p from "supertokens-node/recipe/userroles";
 import "@dzangolab/fastify-mailer";
 import R from "validator";
 import { z as b } from "zod";
-const B = P(async (e) => {
-  e.config.mercurius.enabled && e.register(D, {
-    async applyPolicy(r, t, n, a) {
-      if (!a.user) {
-        const i = new S.ErrorWithProps("unauthorized");
-        return i.statusCode = 200, i;
+const J = P(async (e) => {
+  e.config.mercurius.enabled && e.register(F, {
+    async applyPolicy(r, i, n, o) {
+      if (!o.user) {
+        const t = new S.ErrorWithProps("unauthorized");
+        return t.statusCode = 200, t;
       }
       return !0;
     },
@@ -29,7 +29,7 @@ const B = P(async (e) => {
   const s = e.config.user.supertokens.recipes;
   return s && s.session ? f.init(s.session(e)) : f.init(M());
 };
-let K = class extends y {
+let B = class extends y {
   /* eslint-enabled */
 };
 class h extends E {
@@ -42,29 +42,37 @@ class h extends E {
   get factory() {
     if (!this.table)
       throw new Error("Service table is not defined");
-    return this._factory || (this._factory = new K(this)), this._factory;
+    return this._factory || (this._factory = new B(this)), this._factory;
   }
 }
-const H = (e, s) => {
-  const { config: r, log: t, slonik: n } = s;
-  return async (a) => {
-    const i = await e.emailPasswordSignIn(
-      a
+const K = (e, s) => {
+  const { config: r, log: i, slonik: n } = s;
+  return async (o) => {
+    const t = await e.emailPasswordSignIn(
+      o
     );
-    if (i.status !== "OK")
-      return i;
-    const c = new h(r, n);
-    let o;
-    if (o = await c.findById(i.user.id), !o && (o = await c.create({
-      id: i.user.id,
-      email: i.user.email
-    }), !o))
-      throw t.error(`Unable to create user ${i.user.id}`), new Error(`Unable to create user ${i.user.id}`);
+    if (t.status !== "OK")
+      return t;
+    const a = new h(r, n);
+    let c;
+    try {
+      c = await a.update(t.user.id, {
+        last_login_at: Date.now()
+      });
+    } catch {
+      if (c = await a.create({
+        id: t.user.id,
+        email: t.user.email,
+        signed_up_at: t.user.timeJoined,
+        last_login_at: t.user.timeJoined
+      }), !c)
+        throw i.error(`Unable to create user ${t.user.id}`), new Error(`Unable to create user ${t.user.id}`);
+    }
     return {
       status: "OK",
       user: {
-        ...i.user,
-        ...o
+        ...t.user,
+        ...c
       }
     };
   };
@@ -72,75 +80,77 @@ const H = (e, s) => {
   fastify: e,
   subject: s,
   templateData: r = {},
-  templateName: t,
+  templateName: i,
   to: n
 }) => {
-  const { config: a, mailer: i, log: c } = e;
-  return i.sendMail({
+  const { config: o, mailer: t, log: a } = e;
+  return t.sendMail({
     subject: s,
-    templateName: t,
+    templateName: i,
     to: n,
     templateData: {
-      appName: a.appName,
+      appName: o.appName,
       ...r
     }
-  }).catch((o) => {
-    throw c.error(o.stack), {
+  }).catch((c) => {
+    throw a.error(c.stack), {
       name: "SEND_EMAIL",
-      message: o.message,
+      message: c.message,
       statusCode: 500
     };
   });
-}, W = (e, s) => {
-  const { config: r, log: t, slonik: n } = s;
-  return async (a) => {
+}, H = (e, s) => {
+  const { config: r, log: i, slonik: n } = s;
+  return async (o) => {
     if (r.user.features?.signUp === !1)
       throw {
         name: "SIGN_UP_DISABLED",
         message: "SignUp feature is currently disabled",
         statusCode: 404
       };
-    const i = await e.emailPasswordSignUp(
-      a
+    const t = await e.emailPasswordSignUp(
+      o
     );
-    if (i.status === "OK") {
-      const o = await new h(r, n).create({
-        id: i.user.id,
-        email: i.user.email
+    if (t.status === "OK") {
+      const c = await new h(r, n).create({
+        id: t.user.id,
+        email: t.user.email,
+        signed_up_at: t.user.timeJoined,
+        last_login_at: t.user.timeJoined
       });
-      if (!o)
-        throw t.error(`Unable to create user ${i.user.id}`), new Error(`Unable to create user ${i.user.id}`);
-      i.user = {
-        ...i.user,
-        ...o
+      if (!c)
+        throw i.error(`Unable to create user ${t.user.id}`), new Error(`Unable to create user ${t.user.id}`);
+      t.user = {
+        ...t.user,
+        ...c
       };
       const u = await p.addRoleToUser(
-        i.user.id,
+        t.user.id,
         r.user.role || "USER"
       );
-      u.status !== "OK" && t.error(u.status);
+      u.status !== "OK" && i.error(u.status);
     }
-    if (r.user.supertokens.sendUserAlreadyExistsWarning && i.status === "EMAIL_ALREADY_EXISTS_ERROR")
+    if (r.user.supertokens.sendUserAlreadyExistsWarning && t.status === "EMAIL_ALREADY_EXISTS_ERROR")
       try {
         await O({
           fastify: s,
           subject: "Duplicate Email Registration",
           templateData: {
-            emailId: a.email
+            emailId: o.email
           },
           templateName: "duplicate-email-warning",
-          to: a.email
+          to: o.email
         });
-      } catch (c) {
-        t.error(c);
+      } catch (a) {
+        i.error(a);
       }
-    return i;
+    return t;
   };
-}, J = (e, s) => b.string({
+}, W = (e, s) => b.string({
   required_error: e.required
 }).refine((r) => R.isEmail(r, s || {}), {
   message: e.invalid
-}), I = {
+}), _ = {
   minLength: 8,
   minLowercase: 0,
   minUppercase: 0,
@@ -155,14 +165,14 @@ const H = (e, s) => {
   pointsForContainingSymbol: 10
 }, j = (e, s) => {
   const r = {
-    ...I,
+    ..._,
     ...s
   };
   return b.string({
     required_error: e.required
   }).refine(
-    (t) => R.isStrongPassword(
-      t,
+    (i) => R.isStrongPassword(
+      i,
       r
     ),
     {
@@ -170,7 +180,7 @@ const H = (e, s) => {
     }
   );
 }, G = (e, s) => {
-  const r = J(
+  const r = W(
     {
       invalid: "Email is invalid",
       required: "Email is required"
@@ -187,47 +197,47 @@ const H = (e, s) => {
     return s;
   const r = [];
   if (e.minLength) {
-    const t = e.minLength;
+    const i = e.minLength;
     r.push(
-      `minimum ${t} ${t > 1 ? "characters" : "character"}`
+      `minimum ${i} ${i > 1 ? "characters" : "character"}`
     );
   }
   if (e.minLowercase) {
-    const t = e.minLowercase;
+    const i = e.minLowercase;
     r.push(
-      `minimum ${t} ${t > 1 ? "lowercases" : "lowercase"}`
+      `minimum ${i} ${i > 1 ? "lowercases" : "lowercase"}`
     );
   }
   if (e.minUppercase) {
-    const t = e.minUppercase;
+    const i = e.minUppercase;
     r.push(
-      `minimum ${t} ${t > 1 ? "uppercases" : "uppercase"}`
+      `minimum ${i} ${i > 1 ? "uppercases" : "uppercase"}`
     );
   }
   if (e.minNumbers) {
-    const t = e.minNumbers;
-    r.push(`minimum ${t} ${t > 1 ? "numbers" : "number"}`);
+    const i = e.minNumbers;
+    r.push(`minimum ${i} ${i > 1 ? "numbers" : "number"}`);
   }
   if (e.minSymbols) {
-    const t = e.minSymbols;
-    r.push(`minimum ${t} ${t > 1 ? "symbols" : "symbol"}`);
+    const i = e.minSymbols;
+    r.push(`minimum ${i} ${i > 1 ? "symbols" : "symbol"}`);
   }
   if (r.length > 0) {
     s = "Password should contain ";
-    const t = r.pop();
-    r.length > 0 && (s += r.join(", ") + " and "), s += t;
+    const i = r.pop();
+    r.length > 0 && (s += r.join(", ") + " and "), s += i;
   }
   return s;
-}, k = (e, s) => {
-  const r = s.user.password, t = j(
+}, I = (e, s) => {
+  const r = s.user.password, i = j(
     {
       required: "Password is required",
-      weak: V({ ...I, ...r })
+      weak: V({ ..._, ...r })
     },
     r
   ).safeParse(e);
-  return t.success ? { success: !0 } : {
-    message: t.error.issues[0].message,
+  return i.success ? { success: !0 } : {
+    message: i.error.issues[0].message,
     success: !1
   };
 }, X = (e) => [
@@ -242,7 +252,7 @@ const H = (e, s) => {
   {
     id: "password",
     validate: async (s) => {
-      const r = k(s, e);
+      const r = I(s, e);
       if (!r.success)
         return r.message;
     }
@@ -250,12 +260,12 @@ const H = (e, s) => {
 ], z = (e) => {
   let s = [];
   if (typeof e.user.supertokens?.recipes?.thirdPartyEmailPassword == "object") {
-    const t = e.user.supertokens?.recipes?.thirdPartyEmailPassword.signUpFeature?.formFields;
-    t && (s = [...t]);
+    const i = e.user.supertokens?.recipes?.thirdPartyEmailPassword.signUpFeature?.formFields;
+    i && (s = [...i]);
   }
-  const r = new Set(s.map((t) => t.id));
-  for (const t of X(e))
-    r.has(t.id) || s.push(t);
+  const r = new Set(s.map((i) => i.id));
+  for (const i of X(e))
+    r.has(i.id) || s.push(i);
   return s;
 }, Q = (e) => {
   let s;
@@ -267,11 +277,11 @@ const H = (e, s) => {
   }
   return s;
 }, Y = (e, s) => {
-  const r = s.config.appOrigin[0], t = "/reset-password";
+  const r = s.config.appOrigin[0], i = "/reset-password";
   return async (n) => {
-    const a = n.userContext._default.request.request, i = a.headers.referer || a.headers.origin || a.hostname, c = Q(i) || r, o = n.passwordResetLink.replace(
+    const o = n.userContext._default.request.request, t = o.headers.referer || o.headers.origin || o.hostname, a = Q(t) || r, c = n.passwordResetLink.replace(
       r + "/auth/reset-password",
-      c + (s.config.user.supertokens.resetPasswordPath || t)
+      a + (s.config.user.supertokens.resetPasswordPath || i)
     );
     await O({
       fastify: s,
@@ -279,12 +289,12 @@ const H = (e, s) => {
       templateName: "reset-password",
       to: n.user.email,
       templateData: {
-        passwordResetLink: o
+        passwordResetLink: c
       }
     });
   };
 }, x = (e, s) => {
-  const { config: r, log: t } = s;
+  const { config: r, log: i } = s;
   return async (n) => {
     if (!await A(
       n.thirdPartyId,
@@ -296,116 +306,124 @@ const H = (e, s) => {
         message: "SignUp feature is currently disabled",
         statusCode: 404
       };
-    const i = await e.thirdPartySignInUp(
+    const t = await e.thirdPartySignInUp(
       n
     );
-    if (i.status === "OK" && i.createdNewUser) {
-      const c = await p.addRoleToUser(
-        i.user.id,
+    if (t.status === "OK" && t.createdNewUser) {
+      const a = await p.addRoleToUser(
+        t.user.id,
         r.user.role || "USER"
       );
-      c.status !== "OK" && t.error(c.status);
+      a.status !== "OK" && i.error(a.status);
     }
-    return i;
+    return t;
   };
 }, Z = (e, s) => {
-  const { config: r, log: t, slonik: n } = s;
-  return async (a) => {
+  const { config: r, log: i, slonik: n } = s;
+  return async (o) => {
     if (e.thirdPartySignInUpPOST === void 0)
       throw new Error("Should never come here");
-    const i = await e.thirdPartySignInUpPOST(a);
-    if (i.status === "OK") {
-      const c = new h(r, n);
-      let o;
-      if (o = await c.findById(i.user.id), !o && (o = await c.create({
-        id: i.user.id,
-        email: i.user.email
-      }), !o))
-        throw t.error(`Unable to create user ${i.user.id}`), new Error(`Unable to create user ${i.user.id}`);
+    const t = await e.thirdPartySignInUpPOST(o);
+    if (t.status === "OK") {
+      const a = new h(r, n);
+      let c;
+      try {
+        c = await (t.createdNewUser ? a.create({
+          id: t.user.id,
+          email: t.user.email,
+          signed_up_at: t.user.timeJoined,
+          last_login_at: t.user.timeJoined
+        }) : a.update(t.user.id, {
+          last_login_at: Date.now()
+        }));
+      } catch {
+        if (!c)
+          throw i.error(`Unable to create user ${t.user.id}`), new Error(`Unable to create user ${t.user.id}`);
+      }
       return {
         status: "OK",
-        createdNewUser: i.createdNewUser,
+        createdNewUser: t.createdNewUser,
         user: {
-          ...i.user,
-          ...o
+          ...t.user,
+          ...c
         },
-        session: i.session,
-        authCodeResponse: i.authCodeResponse
+        session: t.session,
+        authCodeResponse: t.authCodeResponse
       };
     }
-    return i;
+    return t;
   };
 }, ee = (e) => {
-  const { Apple: s, Facebook: r, Github: t, Google: n } = l, a = e.user.supertokens.providers, i = [], c = [
+  const { Apple: s, Facebook: r, Github: i, Google: n } = l, o = e.user.supertokens.providers, t = [], a = [
     { name: "google", initProvider: n },
-    { name: "github", initProvider: t },
+    { name: "github", initProvider: i },
     { name: "facebook", initProvider: r },
     { name: "apple", initProvider: s }
   ];
-  for (const o of c)
-    a?.[o.name] && i.push(
-      o.initProvider(a[o.name])
+  for (const c of a)
+    o?.[c.name] && t.push(
+      c.initProvider(o[c.name])
     );
-  return i;
+  return t;
 }, se = (e) => {
   const { config: s } = e;
   let r = {};
   return typeof s.user.supertokens.recipes?.thirdPartyEmailPassword == "object" && (r = s.user.supertokens.recipes.thirdPartyEmailPassword), {
     override: {
-      apis: (t) => {
+      apis: (i) => {
         const n = {};
         if (r.override?.apis) {
-          const a = r.override.apis;
-          let i;
-          for (i in a) {
-            const c = a[i];
-            c && (n[i] = c(
-              t,
+          const o = r.override.apis;
+          let t;
+          for (t in o) {
+            const a = o[t];
+            a && (n[t] = a(
+              i,
               e
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
             ));
           }
         }
         return {
-          ...t,
+          ...i,
           // [DU 2023-APR-19] We do not need this
           // emailPasswordSignUpPOST: emailPasswordSignUpPOST(
           //   originalImplementation,
           //   fastify
           // ),
           thirdPartySignInUpPOST: Z(
-            t,
+            i,
             e
           ),
           ...n
         };
       },
-      functions: (t) => {
+      functions: (i) => {
         const n = {};
         if (r.override?.functions) {
-          const a = r.override.functions;
-          let i;
-          for (i in a) {
-            const c = a[i];
-            c && (n[i] = c(
-              t,
+          const o = r.override.functions;
+          let t;
+          for (t in o) {
+            const a = o[t];
+            a && (n[t] = a(
+              i,
               e
               // eslint-disable-next-line  @typescript-eslint/no-explicit-any
             ));
           }
         }
         return {
-          ...t,
-          emailPasswordSignIn: H(
-            t,
+          ...i,
+          emailPasswordSignIn: K(
+            i,
             e
           ),
-          emailPasswordSignUp: W(
-            t,
+          emailPasswordSignUp: H(
+            i,
             e
           ),
           thirdPartySignInUp: x(
-            t,
+            i,
             e
           ),
           ...n
@@ -416,11 +434,11 @@ const H = (e, s) => {
       formFields: z(s)
     },
     emailDelivery: {
-      override: (t) => {
+      override: (i) => {
         let n;
         return r?.sendEmail && (n = r.sendEmail), {
-          ...t,
-          sendEmail: n ? n(t, e) : Y(t, e)
+          ...i,
+          sendEmail: n ? n(i, e) : Y(i, e)
         };
       }
     },
@@ -452,36 +470,36 @@ const H = (e, s) => {
     }
   });
 }, ae = async (e, s, r) => {
-  const { config: t, log: n } = e;
-  n.info("Registering supertokens plugin"), oe(e), e.setErrorHandler(N()), e.register(L, {
-    origin: t.appOrigin,
+  const { config: i, log: n } = e;
+  n.info("Registering supertokens plugin"), oe(e), e.setErrorHandler(N()), e.register(D, {
+    origin: i.appOrigin,
     allowedHeaders: [
       "Content-Type",
       "st-auth-mode",
       ...v.getAllCORSHeaders()
     ],
     credentials: !0
-  }), e.register(C), e.register(_), n.info("Registering supertokens plugin complete"), e.decorate("verifySession", T), r();
+  }), e.register(L), e.register(C), n.info("Registering supertokens plugin complete"), e.decorate("verifySession", T), r();
 }, ce = P(ae), ue = async (e, s, r) => {
-  const { config: t, slonik: n } = s, i = (await f.getSession(s, $(r), {
+  const { config: i, slonik: n } = s, t = (await f.getSession(s, $(r), {
     sessionRequired: !1
   }))?.getUserId();
-  if (i) {
-    const c = new h(t, n);
-    let o = null;
+  if (t) {
+    const a = new h(i, n);
+    let c = null;
     try {
-      o = await c.findById(i);
+      c = await a.findById(t);
     } catch {
     }
-    if (!o)
+    if (!c)
       throw new Error("Unable to find user");
-    const { roles: u } = await p.getRolesForUser(i);
-    e.user = o, e.roles = u;
+    const { roles: u } = await p.getRolesForUser(t);
+    e.user = c, e.roles = u;
   }
 }, de = P(
   async (e, s, r) => {
-    const { mercurius: t } = e.config;
-    await e.register(ce), t.enabled && await e.register(B), r();
+    const { mercurius: i } = e.config;
+    await e.register(ce), i.enabled && await e.register(J), r();
   }
 );
 de.updateContext = ue;
@@ -503,23 +521,23 @@ class d extends E {
       throw new Error("Service table is not defined");
     return this._factory || (this._factory = new le(this)), this._factory;
   }
-  changePassword = async (s, r, t) => {
-    const n = k(t, this.config);
+  changePassword = async (s, r, i) => {
+    const n = I(i, this.config);
     if (!n.success)
       return {
         status: "FIELD_ERROR",
         message: n.message
       };
-    const a = await l.getUserById(s);
-    if (r && t)
-      if (a)
+    const o = await l.getUserById(s);
+    if (r && i)
+      if (o)
         if ((await l.emailPasswordSignIn(
-          a.email,
+          o.email,
           r
         )).status === "OK") {
           if (await l.updateEmailOrPassword({
             userId: s,
-            password: t
+            password: i
           }))
             return await f.revokeAllSessionsForUser(s), {
               status: "OK"
@@ -547,9 +565,9 @@ class d extends E {
 }
 const pe = {
   changePassword: async (e, s, r) => {
-    const t = new d(r.config, r.database);
+    const i = new d(r.config, r.database);
     try {
-      return r.user?.id ? await t.changePassword(
+      return r.user?.id ? await i.changePassword(
         r.user?.id,
         s.oldPassword,
         s.newPassword
@@ -559,17 +577,17 @@ const pe = {
       };
     } catch (n) {
       r.app.log.error(n);
-      const a = new S.ErrorWithProps(
+      const o = new S.ErrorWithProps(
         "Oops, Something went wrong"
       );
-      return a.statusCode = 500, a;
+      return o.statusCode = 500, o;
     }
   }
 }, me = {
   me: async (e, s, r) => {
-    const t = new d(r.config, r.database);
+    const i = new d(r.config, r.database);
     if (r.user?.id)
-      return t.findById(r.user.id);
+      return i.findById(r.user.id);
     {
       r.app.log.error(
         "Could not able to get user id from mercurius context"
@@ -587,43 +605,43 @@ const pe = {
     s.filters ? JSON.parse(JSON.stringify(s.filters)) : void 0,
     s.sort ? JSON.parse(JSON.stringify(s.sort)) : void 0
   )
-}, Le = { Mutation: pe, Query: me }, Ce = async (e, s, r) => {
-  const t = "/change_password", n = "/me", a = "/users";
+}, De = { Mutation: pe, Query: me }, Le = async (e, s, r) => {
+  const i = "/change_password", n = "/me", o = "/users";
   e.get(
-    a,
+    o,
     {
       preHandler: e.verifySession()
     },
-    async (i, c) => {
-      const o = new d(i.config, i.slonik), { limit: u, offset: m, filters: g, sort: w } = i.query, U = await o.list(
+    async (t, a) => {
+      const c = new d(t.config, t.slonik), { limit: u, offset: m, filters: g, sort: w } = t.query, U = await c.list(
         u,
         m,
         g ? JSON.parse(g) : void 0,
         w ? JSON.parse(w) : void 0
       );
-      c.send(U);
+      a.send(U);
     }
   ), e.post(
-    t,
+    i,
     {
       preHandler: e.verifySession()
     },
-    async (i, c) => {
+    async (t, a) => {
       try {
-        const o = i.session, u = i.body, m = o && o.getUserId();
+        const c = t.session, u = t.body, m = c && c.getUserId();
         if (!m)
           throw new Error("User not found in session");
-        const g = u.oldPassword ?? "", w = u.newPassword ?? "", F = await new d(i.config, i.slonik).changePassword(
+        const g = u.oldPassword ?? "", w = u.newPassword ?? "", k = await new d(t.config, t.slonik).changePassword(
           m,
           g,
           w
         );
-        c.send(F);
-      } catch (o) {
-        e.log.error(o), c.status(500), c.send({
+        a.send(k);
+      } catch (c) {
+        e.log.error(c), a.status(500), a.send({
           status: "ERROR",
           message: "Oops! Something went wrong",
-          error: o
+          error: c
         });
       }
     }
@@ -632,10 +650,10 @@ const pe = {
     {
       preHandler: e.verifySession()
     },
-    async (i, c) => {
-      const o = new d(i.config, i.slonik), u = i.session?.getUserId();
+    async (t, a) => {
+      const c = new d(t.config, t.slonik), u = t.session?.getUserId();
       if (u)
-        c.send(await o.findById(u));
+        a.send(await c.findById(u));
       else
         throw e.log.error("Could not able to get user id from session"), new Error("Oops, Something went wrong");
     }
@@ -644,6 +662,6 @@ const pe = {
 export {
   d as UserService,
   de as default,
-  Le as userResolver,
-  Ce as userRoutes
+  De as userResolver,
+  Le as userRoutes
 };
