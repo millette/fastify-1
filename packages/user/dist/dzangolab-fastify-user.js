@@ -1,21 +1,21 @@
 import "@dzangolab/fastify-mercurius";
 import f from "fastify-plugin";
 import P from "mercurius";
-import I from "mercurius-auth";
-import k from "@fastify/cors";
+import k from "mercurius-auth";
+import L from "@fastify/cors";
 import D from "@fastify/formbody";
 import U from "supertokens-node";
 import { errorHandler as F, plugin as N, wrapResponse as C } from "supertokens-node/framework/fastify";
-import { verifySession as L } from "supertokens-node/recipe/session/framework/fastify";
+import { verifySession as $ } from "supertokens-node/recipe/session/framework/fastify";
 import h from "supertokens-node/recipe/session";
-import l, { getUserByThirdPartyInfo as $ } from "supertokens-node/recipe/thirdpartyemailpassword";
-import { DefaultSqlFactory as T, BaseService as _ } from "@dzangolab/fastify-slonik";
+import l, { getUserByThirdPartyInfo as _ } from "supertokens-node/recipe/thirdpartyemailpassword";
+import { DefaultSqlFactory as A, BaseService as T } from "@dzangolab/fastify-slonik";
 import v from "validator";
 import { z as E } from "zod";
 import p from "supertokens-node/recipe/userroles";
 import "@dzangolab/fastify-mailer";
-const A = f(async (e) => {
-  e.config.mercurius.enabled && e.register(I, {
+const B = f(async (e) => {
+  e.config.mercurius.enabled && e.register(k, {
     async applyPolicy(r, t, i, o) {
       if (!o.user) {
         const n = new P.ErrorWithProps("unauthorized");
@@ -25,14 +25,14 @@ const A = f(async (e) => {
     },
     authDirective: "auth"
   });
-}), B = () => ({}), K = (e) => {
+}), K = () => ({}), q = (e) => {
   const s = e.config.user.supertokens.recipes;
-  return s && s.session ? h.init(s.session(e)) : h.init(B());
+  return s && s.session ? h.init(s.session(e)) : h.init(K());
 };
-class q extends T {
+class M extends A {
   /* eslint-enabled */
 }
-const M = (e, s) => E.string({
+const H = (e, s) => E.string({
   required_error: e.required
 }).refine((r) => v.isEmail(r, s || {}), {
   message: e.invalid
@@ -49,7 +49,7 @@ const M = (e, s) => E.string({
   pointsForContainingUpper: 10,
   pointsForContainingNumber: 10,
   pointsForContainingSymbol: 10
-}, H = (e, s) => {
+}, W = (e, s) => {
   const r = {
     ...y,
     ...s
@@ -65,7 +65,7 @@ const M = (e, s) => E.string({
       message: e.weak
     }
   );
-}, W = (e) => {
+}, J = (e) => {
   let s = "Password is too weak";
   if (!e)
     return s;
@@ -103,10 +103,10 @@ const M = (e, s) => E.string({
   }
   return s;
 }, R = (e, s) => {
-  const r = s.user.password, t = H(
+  const r = s.user.password, t = W(
     {
       required: "Password is required",
-      weak: W({ ...y, ...r })
+      weak: J({ ...y, ...r })
     },
     r
   ).safeParse(e);
@@ -115,7 +115,7 @@ const M = (e, s) => E.string({
     success: !1
   };
 };
-class d extends _ {
+class d extends T {
   constructor(s, r) {
     super(s, r);
   }
@@ -128,7 +128,7 @@ class d extends _ {
   get factory() {
     if (!this.table)
       throw new Error("Service table is not defined");
-    return this._factory || (this._factory = new q(this)), this._factory;
+    return this._factory || (this._factory = new M(this)), this._factory;
   }
   changePassword = async (s, r, t) => {
     const i = R(t, this.config);
@@ -172,7 +172,7 @@ class d extends _ {
       };
   };
 }
-const J = (e, s) => {
+const O = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace("T", " "), j = (e, s) => {
   const { config: r, log: t, slonik: i } = s;
   return async (o) => {
     const n = await e.emailPasswordSignIn(
@@ -184,7 +184,7 @@ const J = (e, s) => {
     let c;
     try {
       c = await a.update(n.user.id, {
-        lastLoginAt: (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace("T", " ")
+        lastLoginAt: O()
       });
     } catch {
       if (!c)
@@ -198,7 +198,7 @@ const J = (e, s) => {
       }
     };
   };
-}, O = async ({
+}, b = async ({
   fastify: e,
   subject: s,
   templateData: r = {},
@@ -221,7 +221,7 @@ const J = (e, s) => {
       statusCode: 500
     };
   });
-}, j = (e, s) => {
+}, G = (e, s) => {
   const { config: r, log: t, slonik: i } = s;
   return async (o) => {
     if (r.user.features?.signUp === !1)
@@ -252,7 +252,7 @@ const J = (e, s) => {
     }
     if (r.user.supertokens.sendUserAlreadyExistsWarning && n.status === "EMAIL_ALREADY_EXISTS_ERROR")
       try {
-        await O({
+        await b({
           fastify: s,
           subject: "Duplicate Email Registration",
           templateData: {
@@ -266,8 +266,8 @@ const J = (e, s) => {
       }
     return n;
   };
-}, G = (e, s) => {
-  const r = M(
+}, V = (e, s) => {
+  const r = H(
     {
       invalid: "Email is invalid",
       required: "Email is required"
@@ -278,11 +278,11 @@ const J = (e, s) => {
     message: r.error.issues[0].message,
     success: !1
   };
-}, V = (e) => [
+}, z = (e) => [
   {
     id: "email",
     validate: async (s) => {
-      const r = G(s, e);
+      const r = V(s, e);
       if (!r.success)
         return r.message;
     }
@@ -295,17 +295,17 @@ const J = (e, s) => {
         return r.message;
     }
   }
-], z = (e) => {
+], X = (e) => {
   let s = [];
   if (typeof e.user.supertokens?.recipes?.thirdPartyEmailPassword == "object") {
     const t = e.user.supertokens?.recipes?.thirdPartyEmailPassword.signUpFeature?.formFields;
     t && (s = [...t]);
   }
   const r = new Set(s.map((t) => t.id));
-  for (const t of V(e))
+  for (const t of z(e))
     r.has(t.id) || s.push(t);
   return s;
-}, X = (e) => {
+}, Q = (e) => {
   let s;
   try {
     if (s = new URL(e).origin, !s || s === "null")
@@ -314,14 +314,14 @@ const J = (e, s) => {
     s = "";
   }
   return s;
-}, Q = (e, s) => {
+}, Y = (e, s) => {
   const r = s.config.appOrigin[0], t = "/reset-password";
   return async (i) => {
-    const o = i.userContext._default.request.request, n = o.headers.referer || o.headers.origin || o.hostname, a = X(n) || r, c = i.passwordResetLink.replace(
+    const o = i.userContext._default.request.request, n = o.headers.referer || o.headers.origin || o.hostname, a = Q(n) || r, c = i.passwordResetLink.replace(
       r + "/auth/reset-password",
       a + (s.config.user.supertokens.resetPasswordPath || t)
     );
-    await O({
+    await b({
       fastify: s,
       subject: "Reset Password",
       templateName: "reset-password",
@@ -331,10 +331,10 @@ const J = (e, s) => {
       }
     });
   };
-}, Y = (e, s) => {
+}, Z = (e, s) => {
   const { config: r, log: t } = s;
   return async (i) => {
-    if (!await $(
+    if (!await _(
       i.thirdPartyId,
       i.thirdPartyUserId,
       i.userContext
@@ -356,7 +356,7 @@ const J = (e, s) => {
     }
     return n;
   };
-}, Z = (e, s) => {
+}, x = (e, s) => {
   const { config: r, log: t, slonik: i } = s;
   return async (o) => {
     if (e.thirdPartySignInUpPOST === void 0)
@@ -370,7 +370,7 @@ const J = (e, s) => {
           id: n.user.id,
           email: n.user.email
         }) : a.update(n.user.id, {
-          lastLoginAt: (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace("T", " ")
+          lastLoginAt: O()
         }));
       } catch {
         if (!c)
@@ -389,7 +389,7 @@ const J = (e, s) => {
     }
     return n;
   };
-}, x = (e) => {
+}, ee = (e) => {
   const { Apple: s, Facebook: r, Github: t, Google: i } = l, o = e.user.supertokens.providers, n = [], a = [
     { name: "google", initProvider: i },
     { name: "github", initProvider: t },
@@ -401,7 +401,7 @@ const J = (e, s) => {
       c.initProvider(o[c.name])
     );
   return n;
-}, ee = (e) => {
+}, se = (e) => {
   const { config: s } = e;
   let r = {};
   return typeof s.user.supertokens.recipes?.thirdPartyEmailPassword == "object" && (r = s.user.supertokens.recipes.thirdPartyEmailPassword), {
@@ -427,7 +427,7 @@ const J = (e, s) => {
           //   originalImplementation,
           //   fastify
           // ),
-          thirdPartySignInUpPOST: Z(
+          thirdPartySignInUpPOST: x(
             t,
             e
           ),
@@ -450,15 +450,15 @@ const J = (e, s) => {
         }
         return {
           ...t,
-          emailPasswordSignIn: J(
+          emailPasswordSignIn: j(
             t,
             e
           ),
-          emailPasswordSignUp: j(
+          emailPasswordSignUp: G(
             t,
             e
           ),
-          thirdPartySignInUp: Y(
+          thirdPartySignInUp: Z(
             t,
             e
           ),
@@ -467,32 +467,32 @@ const J = (e, s) => {
       }
     },
     signUpFeature: {
-      formFields: z(s)
+      formFields: X(s)
     },
     emailDelivery: {
       override: (t) => {
         let i;
         return r?.sendEmail && (i = r.sendEmail), {
           ...t,
-          sendEmail: i ? i(t, e) : Q(t, e)
+          sendEmail: i ? i(t, e) : Y(t, e)
         };
       }
     },
-    providers: x(s)
+    providers: ee(s)
   };
-}, se = (e) => {
+}, re = (e) => {
   const s = e.config.user.supertokens.recipes?.thirdPartyEmailPassword;
   return typeof s == "function" ? l.init(s(e)) : l.init(
-    ee(e)
+    se(e)
   );
-}, re = () => ({}), te = (e) => {
+}, te = () => ({}), ne = (e) => {
   const s = e.config.user.supertokens.recipes;
-  return s && s.userRoles ? p.init(s.userRoles(e)) : p.init(re());
-}, ne = (e) => [
-  K(e),
-  se(e),
-  te(e)
-], ie = (e) => {
+  return s && s.userRoles ? p.init(s.userRoles(e)) : p.init(te());
+}, ie = (e) => [
+  q(e),
+  re(e),
+  ne(e)
+], oe = (e) => {
   const { config: s } = e;
   U.init({
     appInfo: {
@@ -500,14 +500,14 @@ const J = (e, s) => {
       appName: s.appName,
       websiteDomain: s.appOrigin[0]
     },
-    recipeList: ne(e),
+    recipeList: ie(e),
     supertokens: {
       connectionURI: s.user.supertokens.connectionUri
     }
   });
-}, oe = async (e, s, r) => {
+}, ae = async (e, s, r) => {
   const { config: t, log: i } = e;
-  i.info("Registering supertokens plugin"), ie(e), e.setErrorHandler(F()), e.register(k, {
+  i.info("Registering supertokens plugin"), oe(e), e.setErrorHandler(F()), e.register(L, {
     origin: t.appOrigin,
     allowedHeaders: [
       "Content-Type",
@@ -515,8 +515,8 @@ const J = (e, s) => {
       ...U.getAllCORSHeaders()
     ],
     credentials: !0
-  }), e.register(D), e.register(N), i.info("Registering supertokens plugin complete"), e.decorate("verifySession", L), r();
-}, ae = f(oe), ce = async (e, s, r) => {
+  }), e.register(D), e.register(N), i.info("Registering supertokens plugin complete"), e.decorate("verifySession", $), r();
+}, ce = f(ae), ue = async (e, s, r) => {
   const { config: t, slonik: i } = s, n = (await h.getSession(s, C(r), {
     sessionRequired: !1
   }))?.getUserId();
@@ -532,14 +532,14 @@ const J = (e, s) => {
     const { roles: u } = await p.getRolesForUser(n);
     e.user = c, e.roles = u;
   }
-}, ue = f(
+}, de = f(
   async (e, s, r) => {
     const { mercurius: t } = e.config;
-    await e.register(ae), t.enabled && await e.register(A), r();
+    await e.register(ce), t.enabled && await e.register(B), r();
   }
 );
-ue.updateContext = ce;
-const de = {
+de.updateContext = ue;
+const le = {
   changePassword: async (e, s, r) => {
     const t = new d(r.config, r.database);
     try {
@@ -559,7 +559,7 @@ const de = {
       return o.statusCode = 500, o;
     }
   }
-}, le = {
+}, pe = {
   me: async (e, s, r) => {
     const t = new d(r.config, r.database);
     if (r.user?.id)
@@ -581,7 +581,7 @@ const de = {
     s.filters ? JSON.parse(JSON.stringify(s.filters)) : void 0,
     s.sort ? JSON.parse(JSON.stringify(s.sort)) : void 0
   )
-}, ke = { Mutation: de, Query: le }, De = async (e, s, r) => {
+}, Le = { Mutation: le, Query: pe }, De = async (e, s, r) => {
   const t = "/change_password", i = "/me", o = "/users";
   e.get(
     o,
@@ -607,12 +607,12 @@ const de = {
         const c = n.session, u = n.body, g = c && c.getUserId();
         if (!g)
           throw new Error("User not found in session");
-        const m = u.oldPassword ?? "", w = u.newPassword ?? "", b = await new d(n.config, n.slonik).changePassword(
+        const m = u.oldPassword ?? "", w = u.newPassword ?? "", I = await new d(n.config, n.slonik).changePassword(
           g,
           m,
           w
         );
-        a.send(b);
+        a.send(I);
       } catch (c) {
         e.log.error(c), a.status(500), a.send({
           status: "ERROR",
@@ -637,7 +637,7 @@ const de = {
 };
 export {
   d as UserService,
-  ue as default,
-  ke as userResolver,
+  de as default,
+  Le as userResolver,
   De as userRoutes
 };
