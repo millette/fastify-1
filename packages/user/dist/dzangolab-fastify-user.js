@@ -172,7 +172,7 @@ class d extends A {
       };
   };
 }
-const O = (e) => e.toISOString().slice(0, 19).replace("T", " "), j = (e, s) => {
+const O = (e) => e.toISOString().slice(0, 23).replace("T", " "), j = (e, s) => {
   const { config: r, log: t, slonik: i } = s;
   return async (o) => {
     const n = await e.emailPasswordSignIn(
