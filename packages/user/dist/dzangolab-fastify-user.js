@@ -2,14 +2,14 @@ import "@dzangolab/fastify-mercurius";
 import f from "fastify-plugin";
 import P from "mercurius";
 import k from "mercurius-auth";
-import L from "@fastify/cors";
-import D from "@fastify/formbody";
+import D from "@fastify/cors";
+import F from "@fastify/formbody";
 import U from "supertokens-node";
-import { errorHandler as F, plugin as N, wrapResponse as C } from "supertokens-node/framework/fastify";
+import { errorHandler as N, plugin as C, wrapResponse as L } from "supertokens-node/framework/fastify";
 import { verifySession as $ } from "supertokens-node/recipe/session/framework/fastify";
 import h from "supertokens-node/recipe/session";
-import l, { getUserByThirdPartyInfo as _ } from "supertokens-node/recipe/thirdpartyemailpassword";
-import { DefaultSqlFactory as A, BaseService as T } from "@dzangolab/fastify-slonik";
+import l, { getUserByThirdPartyInfo as T } from "supertokens-node/recipe/thirdpartyemailpassword";
+import { DefaultSqlFactory as _, BaseService as A } from "@dzangolab/fastify-slonik";
 import v from "validator";
 import { z as E } from "zod";
 import p from "supertokens-node/recipe/userroles";
@@ -29,7 +29,7 @@ const B = f(async (e) => {
   const s = e.config.user.supertokens.recipes;
   return s && s.session ? h.init(s.session(e)) : h.init(K());
 };
-class M extends A {
+class M extends _ {
   /* eslint-enabled */
 }
 const H = (e, s) => E.string({
@@ -115,7 +115,7 @@ const H = (e, s) => E.string({
     success: !1
   };
 };
-class d extends T {
+class d extends A {
   constructor(s, r) {
     super(s, r);
   }
@@ -172,7 +172,7 @@ class d extends T {
       };
   };
 }
-const O = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace("T", " "), j = (e, s) => {
+const O = (e) => e.toISOString().slice(0, 19).replace("T", " "), j = (e, s) => {
   const { config: r, log: t, slonik: i } = s;
   return async (o) => {
     const n = await e.emailPasswordSignIn(
@@ -184,7 +184,7 @@ const O = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace(
     let c;
     try {
       c = await a.update(n.user.id, {
-        lastLoginAt: O()
+        lastLoginAt: O(/* @__PURE__ */ new Date())
       });
     } catch {
       if (!c)
@@ -334,7 +334,7 @@ const O = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace(
 }, Z = (e, s) => {
   const { config: r, log: t } = s;
   return async (i) => {
-    if (!await _(
+    if (!await T(
       i.thirdPartyId,
       i.thirdPartyUserId,
       i.userContext
@@ -370,7 +370,7 @@ const O = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace(
           id: n.user.id,
           email: n.user.email
         }) : a.update(n.user.id, {
-          lastLoginAt: O()
+          lastLoginAt: O(/* @__PURE__ */ new Date())
         }));
       } catch {
         if (!c)
@@ -507,7 +507,7 @@ const O = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace(
   });
 }, ae = async (e, s, r) => {
   const { config: t, log: i } = e;
-  i.info("Registering supertokens plugin"), oe(e), e.setErrorHandler(F()), e.register(L, {
+  i.info("Registering supertokens plugin"), oe(e), e.setErrorHandler(N()), e.register(D, {
     origin: t.appOrigin,
     allowedHeaders: [
       "Content-Type",
@@ -515,9 +515,9 @@ const O = () => (/* @__PURE__ */ new Date()).toISOString().slice(0, 19).replace(
       ...U.getAllCORSHeaders()
     ],
     credentials: !0
-  }), e.register(D), e.register(N), i.info("Registering supertokens plugin complete"), e.decorate("verifySession", $), r();
+  }), e.register(F), e.register(C), i.info("Registering supertokens plugin complete"), e.decorate("verifySession", $), r();
 }, ce = f(ae), ue = async (e, s, r) => {
-  const { config: t, slonik: i } = s, n = (await h.getSession(s, C(r), {
+  const { config: t, slonik: i } = s, n = (await h.getSession(s, L(r), {
     sessionRequired: !1
   }))?.getUserId();
   if (n) {
@@ -581,7 +581,7 @@ const le = {
     s.filters ? JSON.parse(JSON.stringify(s.filters)) : void 0,
     s.sort ? JSON.parse(JSON.stringify(s.sort)) : void 0
   )
-}, Le = { Mutation: le, Query: pe }, De = async (e, s, r) => {
+}, De = { Mutation: le, Query: pe }, Fe = async (e, s, r) => {
   const t = "/change_password", i = "/me", o = "/users";
   e.get(
     o,
@@ -589,10 +589,10 @@ const le = {
       preHandler: e.verifySession()
     },
     async (n, a) => {
-      const c = new d(n.config, n.slonik), { limit: u, offset: g, filters: m, sort: w } = n.query, S = await c.list(
+      const c = new d(n.config, n.slonik), { limit: u, offset: m, filters: g, sort: w } = n.query, S = await c.list(
         u,
-        g,
-        m ? JSON.parse(m) : void 0,
+        m,
+        g ? JSON.parse(g) : void 0,
         w ? JSON.parse(w) : void 0
       );
       a.send(S);
@@ -604,12 +604,12 @@ const le = {
     },
     async (n, a) => {
       try {
-        const c = n.session, u = n.body, g = c && c.getUserId();
-        if (!g)
+        const c = n.session, u = n.body, m = c && c.getUserId();
+        if (!m)
           throw new Error("User not found in session");
-        const m = u.oldPassword ?? "", w = u.newPassword ?? "", I = await new d(n.config, n.slonik).changePassword(
-          g,
+        const g = u.oldPassword ?? "", w = u.newPassword ?? "", I = await new d(n.config, n.slonik).changePassword(
           m,
+          g,
           w
         );
         a.send(I);
@@ -638,6 +638,6 @@ const le = {
 export {
   d as UserService,
   de as default,
-  Le as userResolver,
-  De as userRoutes
+  De as userResolver,
+  Fe as userRoutes
 };
