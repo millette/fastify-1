@@ -83,8 +83,8 @@ importers:
         specifier: 3.2.0
         version: 3.2.0
       nodemailer-mjml:
-        specifier: 1.2.15
-        version: 1.2.15(nodemailer@6.9.1)
+        specifier: 1.2.17
+        version: 1.2.17(nodemailer@6.9.1)
     devDependencies:
       '@dzangolab/fastify-config':
         specifier: 0.31.1
@@ -5367,8 +5367,8 @@ packages:
       html-to-text: 7.1.1
     dev: false
 
-  /nodemailer-mjml@1.2.15(nodemailer@6.9.1):
-    resolution: {integrity: sha512-0WifUIy/MNSAWGpia4CGJr3P15ZD+U7BfoeR9xp/iQNe3LlL0iuBus9KTdXkITsWdhkph8cWVDJrjULopc0KfA==}
+  /nodemailer-mjml@1.2.17(nodemailer@6.9.1):
+    resolution: {integrity: sha512-++9qRenftmDXrfUFhjbOiK3DQiSeapmA1BnYHXoe7u3A1TWf3cGqVIZOdCess3tniTepC3LGouCkf6ZW2d1N7g==}
     peerDependencies:
       nodemailer: '*'
     dependencies:
