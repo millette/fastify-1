@@ -42,7 +42,7 @@
     "eslint": "8.38.0",
     "eslint-config-custom": "0.31.1",
     "fastify": "4.10.2",
-    "fastify-plugin": "4.4.0",
+    "fastify-plugin": "4.5.0",
     "mjml": "4.14.1",
     "prettier": "2.8.8",
     "tsconfig": "0.31.1",

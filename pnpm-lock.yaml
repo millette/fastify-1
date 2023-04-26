@@ -47,8 +47,8 @@ importers:
         specifier: 4.10.2
         version: 4.10.2
       fastify-plugin:
-        specifier: 4.4.0
-        version: 4.4.0
+        specifier: 4.5.0
+        version: 4.5.0
       prettier:
         specifier: 2.8.8
         version: 2.8.8
@@ -120,8 +120,8 @@ importers:
         specifier: 4.10.2
         version: 4.10.2
       fastify-plugin:
-        specifier: 4.4.0
-        version: 4.4.0
+        specifier: 4.5.0
+        version: 4.5.0
       mjml:
         specifier: 4.14.1
         version: 4.14.1
@@ -171,8 +171,8 @@ importers:
         specifier: 4.10.2
         version: 4.10.2
       fastify-plugin:
-        specifier: 4.4.0
-        version: 4.4.0
+        specifier: 4.5.0
+        version: 4.5.0
       graphql:
         specifier: 16.6.0
         version: 16.6.0
@@ -247,8 +247,8 @@ importers:
         specifier: 4.10.2
         version: 4.10.2
       fastify-plugin:
-        specifier: 4.4.0
-        version: 4.4.0
+        specifier: 4.5.0
+        version: 4.5.0
       mercurius:
         specifier: 12.2.0
         version: 12.2.0
@@ -314,8 +314,8 @@ importers:
         specifier: 4.10.2
         version: 4.10.2
       fastify-plugin:
-        specifier: 4.4.0
-        version: 4.4.0
+        specifier: 4.5.0
+        version: 4.5.0
       prettier:
         specifier: 2.8.8
         version: 2.8.8
@@ -390,8 +390,8 @@ importers:
         specifier: 4.10.2
         version: 4.10.2
       fastify-plugin:
-        specifier: 4.4.0
-        version: 4.4.0
+        specifier: 4.5.0
+        version: 4.5.0
       mercurius:
         specifier: 12.2.0
         version: 12.2.0
@@ -1111,7 +1111,7 @@ packages:
   /@fastify/cors@8.2.1:
     resolution: {integrity: sha512-2H2MrDD3ea7g707g1CNNLWb9/tYbmw7HS+MK2SDcgjxwzbOFR93JortelTIO8DBFsZqFtEpKNxiZfSyrGgYcbw==}
     dependencies:
-      fastify-plugin: 4.4.0
+      fastify-plugin: 4.5.0
       mnemonist: 0.39.5
     dev: true
 
@@ -1133,7 +1133,7 @@ packages:
     resolution: {integrity: sha512-H3C6h1GN56/SMrZS8N2vCT2cZr7mIHzBHzOBa5OPpjfB/D6FzP9mMpE02ZzrFX0ANeh0BAJdoXKOF2e7IbV+Og==}
     dependencies:
       fast-querystring: 1.0.0
-      fastify-plugin: 4.4.0
+      fastify-plugin: 4.5.0
     dev: true
 
   /@fastify/static@6.6.0:
@@ -1141,7 +1141,7 @@ packages:
     dependencies:
       '@fastify/accept-negotiator': 1.1.0
       content-disposition: 0.5.4
-      fastify-plugin: 4.4.0
+      fastify-plugin: 4.5.0
       glob: 8.0.3
       p-limit: 3.1.0
       readable-stream: 4.2.0
@@ -1153,7 +1153,7 @@ packages:
   /@fastify/websocket@7.1.1:
     resolution: {integrity: sha512-8lvB/E6p/o3MlmHzM2NJ19ixteI6Ckw0xOebLfoHoORPmpvCWqSp8+HLz4Gc6HrChH4vM9VcSWAK8jYuTT08hQ==}
     dependencies:
-      fastify-plugin: 4.4.0
+      fastify-plugin: 4.5.0
       ws: 8.11.0
     transitivePeerDependencies:
       - bufferutil
@@ -3443,8 +3443,8 @@ packages:
     resolution: {integrity: sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==}
     dev: true
 
-  /fastify-plugin@4.4.0:
-    resolution: {integrity: sha512-ovwFQG2qNy3jcCROiWpr94Hs0le+c7N/3t7m9aVwbFhkxcR/esp2xu25dP8e617HpQdmeDv+gFX4zagdUhDByw==}
+  /fastify-plugin@4.5.0:
+    resolution: {integrity: sha512-79ak0JxddO0utAXAQ5ccKhvs6vX2MGyHHMMsmZkBANrq3hXc1CHzvNPHOcvTsVMEPl5I+NT+RO4YKMGehOfSIg==}
     dev: true
 
   /fastify@4.10.2:
@@ -4798,7 +4798,7 @@ packages:
     resolution: {integrity: sha512-8tXJ+DoiEU8bkMUXeW6WZwkdc8laQiUAqgxt7alP6pcPrM9Wwkc43aJYeZiVngjMYnOj76j8Gug+Lhp55tG5rA==}
     dependencies:
       '@fastify/error': 3.0.0
-      fastify-plugin: 4.4.0
+      fastify-plugin: 4.5.0
       graphql: 16.6.0
     dev: true
 
@@ -4811,7 +4811,7 @@ packages:
       '@fastify/error': 3.0.0
       '@fastify/static': 6.6.0
       '@fastify/websocket': 7.1.1
-      fastify-plugin: 4.4.0
+      fastify-plugin: 4.5.0
       graphql-jit: 0.8.0
       mqemitter: 5.0.0
       p-map: 4.0.0
@@ -4837,7 +4837,7 @@ packages:
       '@fastify/error': 3.0.0
       '@fastify/static': 6.6.0
       '@fastify/websocket': 7.1.1
-      fastify-plugin: 4.4.0
+      fastify-plugin: 4.5.0
       graphql: 16.6.0
       graphql-jit: 0.8.0(graphql@16.6.0)
       mqemitter: 5.0.0
