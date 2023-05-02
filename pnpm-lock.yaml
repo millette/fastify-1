@@ -184,7 +184,7 @@ importers:
         version: 2.8.8
       slonik:
         specifier: 33.1.4
-        version: 33.1.4
+        version: 33.1.4(zod@3.21.4)
       tsconfig:
         specifier: 0.31.1
         version: link:../../tools/tsconfig
@@ -251,7 +251,7 @@ importers:
         version: 4.4.0
       mercurius:
         specifier: 12.2.0
-        version: 12.2.0
+        version: 12.2.0(graphql@16.6.0)
       prettier:
         specifier: 2.8.8
         version: 2.8.8
@@ -394,7 +394,7 @@ importers:
         version: 4.4.0
       mercurius:
         specifier: 12.2.0
-        version: 12.2.0
+        version: 12.2.0(graphql@16.6.0)
       mercurius-auth:
         specifier: 4.0.0
         version: 4.0.0
@@ -405,8 +405,8 @@ importers:
         specifier: 33.1.4
         version: 33.1.4(zod@3.21.4)
       supertokens-node:
-        specifier: 12.1.6
-        version: 12.1.6
+        specifier: 13.6.0
+        version: 13.6.0
       tsconfig:
         specifier: 0.31.1
         version: link:../../tools/tsconfig
@@ -1104,7 +1104,7 @@ packages:
     resolution: {integrity: sha512-69JnK7Cot+ktn7LD5TikP3b7psBPX55tYpQa8WSumt8r117PCa2zwHnImfBtRWYExreJlI48hr0WZaVrTBGj7w==}
     dependencies:
       ajv: 8.12.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1(ajv@8.12.0)
       fast-uri: 2.1.0
     dev: true
 
@@ -1158,12 +1158,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-    dev: true
-
-  /@graphql-typed-document-node/core@3.1.1:
-    resolution: {integrity: sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==}
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dev: true
 
   /@graphql-typed-document-node/core@3.1.1(graphql@16.6.0):
@@ -1407,7 +1401,7 @@ packages:
     dependencies:
       '@slack/types': 1.10.0
       '@types/node': 18.15.11
-      axios: 0.21.4
+      axios: 0.21.4(debug@4.3.4)
     transitivePeerDependencies:
       - debug
     dev: true
@@ -1492,6 +1486,12 @@ packages:
 
   /@types/jsonwebtoken@8.5.9:
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
+    dependencies:
+      '@types/node': 18.15.11
+    dev: true
+
+  /@types/jsonwebtoken@9.0.2:
+    resolution: {integrity: sha512-drE6uz7QBKq1fYqqoFKTDRdFCPHd5TCub75BM+D+cMx7NU9hUz7SESLfC2fSCXVFMO5Yj8sOWHuGqPgjc+fz0Q==}
     dependencies:
       '@types/node': 18.15.11
     dev: true
@@ -1805,8 +1805,10 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats@2.1.1:
+  /ajv-formats@2.1.1(ajv@8.12.0):
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -1925,10 +1927,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /asap@2.0.6:
-    resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==}
-    dev: true
-
   /assertion-error@1.1.0:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
     dev: true
@@ -1950,14 +1948,6 @@ packages:
       fastq: 1.15.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /axios@0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
-    dependencies:
-      follow-redirects: 1.15.2
-    transitivePeerDependencies:
-      - debug
     dev: true
 
   /axios@0.21.4(debug@4.3.4):
@@ -2987,7 +2977,7 @@ packages:
       debug: 4.3.4
       enhanced-resolve: 5.12.0
       eslint: 8.38.0
-      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.58.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.38.0)
+      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.58.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.38.0)
       eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.58.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.38.0)
       get-tsconfig: 4.5.0
       globby: 13.1.3
@@ -3026,35 +3016,6 @@ packages:
       debug: 3.2.7
       eslint: 8.38.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.58.0)(eslint-plugin-import@2.27.5)(eslint@8.38.0)
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /eslint-module-utils@2.7.4(@typescript-eslint/parser@5.58.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.38.0):
-    resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint:
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 5.58.0(eslint@8.38.0)(typescript@4.9.5)
-      debug: 3.2.7
-      eslint: 8.38.0
       eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.58.0)(eslint-plugin-import@2.27.5)(eslint@8.38.0)
     transitivePeerDependencies:
       - supports-color
@@ -3412,7 +3373,7 @@ packages:
     dependencies:
       '@fastify/deepmerge': 1.1.0
       ajv: 8.12.0
-      ajv-formats: 2.1.1
+      ajv-formats: 2.1.1(ajv@8.12.0)
       fast-deep-equal: 3.1.3
       fast-uri: 2.1.0
       rfdc: 1.3.0
@@ -3545,16 +3506,6 @@ packages:
 
   /flatted@3.2.7:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
-
-  /follow-redirects@1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dev: true
 
   /follow-redirects@1.15.2(debug@4.3.4):
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
@@ -3823,20 +3774,6 @@ packages:
 
   /grapheme-splitter@1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
-
-  /graphql-jit@0.8.0:
-    resolution: {integrity: sha512-mxdV9ohO6jKt1o9erb+7RpmnDKQFQCcJlYVfGa3j4+ieP0ITDsAlm194+pfvdv5F4zgrgZfSe5xx5Rf98epJmg==}
-    peerDependencies:
-      graphql: '>=15'
-    dependencies:
-      '@graphql-typed-document-node/core': 3.1.1
-      fast-json-stringify: 1.21.0
-      generate-function: 2.3.1
-      json-schema: 0.4.0
-      lodash.memoize: 4.1.2
-      lodash.merge: 4.6.2
-      lodash.mergewith: 4.6.2
-    dev: true
 
   /graphql-jit@0.8.0(graphql@16.6.0):
     resolution: {integrity: sha512-mxdV9ohO6jKt1o9erb+7RpmnDKQFQCcJlYVfGa3j4+ieP0ITDsAlm194+pfvdv5F4zgrgZfSe5xx5Rf98epJmg==}
@@ -4363,6 +4300,10 @@ packages:
       '@panva/asn1.js': 1.0.0
     dev: true
 
+  /jose@4.14.4:
+    resolution: {integrity: sha512-j8GhLiKmUAh+dsFXlX1aJCbt5KMibuKb+d7j1JaOJG6s2UjX1PQlW+OKB/sD4a/5ZYF4RcmYmLSndOoU3Lt/3g==}
+    dev: true
+
   /js-beautify@1.14.7:
     resolution: {integrity: sha512-5SOX1KXPFKx+5f6ZrPsIPEY7NwKeQz47n3jm2i+XeHx9MoRsfQenlOP13FQhWvg8JRS0+XLO6XYUQ2GX+q+T9A==}
     engines: {node: '>=10'}
@@ -4462,22 +4403,6 @@ packages:
     engines: {'0': node >= 0.2.0}
     dev: true
 
-  /jsonwebtoken@8.5.1:
-    resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
-    engines: {node: '>=4', npm: '>=1.4.28'}
-    dependencies:
-      jws: 3.2.2
-      lodash.includes: 4.3.0
-      lodash.isboolean: 3.0.3
-      lodash.isinteger: 4.0.4
-      lodash.isnumber: 3.0.3
-      lodash.isplainobject: 4.0.6
-      lodash.isstring: 4.0.1
-      lodash.once: 4.1.1
-      ms: 2.1.3
-      semver: 5.7.1
-    dev: true
-
   /jsonwebtoken@9.0.0:
     resolution: {integrity: sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==}
     engines: {node: '>=12', npm: '>=6'}
@@ -4517,6 +4442,20 @@ packages:
       '@types/jsonwebtoken': 8.5.9
       debug: 4.3.4
       jose: 2.0.6
+      limiter: 1.1.5
+      lru-memoizer: 2.2.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /jwks-rsa@3.0.1:
+    resolution: {integrity: sha512-UUOZ0CVReK1QVU3rbi9bC7N5/le8ziUj0A2ef1Q0M7OPD2KvjEYizptqIxGIo6fSLYDkqBrazILS18tYuRc8gw==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@types/express': 4.17.17
+      '@types/jsonwebtoken': 9.0.2
+      debug: 4.3.4
+      jose: 4.14.4
       limiter: 1.1.5
       lru-memoizer: 2.2.0
     transitivePeerDependencies:
@@ -4608,36 +4547,16 @@ packages:
     resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
     dev: true
 
-  /lodash.includes@4.3.0:
-    resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
-    dev: true
-
-  /lodash.isboolean@3.0.3:
-    resolution: {integrity: sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==}
-    dev: true
-
   /lodash.isfunction@3.0.9:
     resolution: {integrity: sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==}
-    dev: true
-
-  /lodash.isinteger@4.0.4:
-    resolution: {integrity: sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==}
     dev: true
 
   /lodash.ismatch@4.4.0:
     resolution: {integrity: sha512-fPMfXjGQEV9Xsq/8MTSgUf255gawYRbjwMyDbcvDhXgV7enSZA0hynz6vMPnpAb5iONEzBHBPsT+0zes5Z301g==}
     dev: true
 
-  /lodash.isnumber@3.0.3:
-    resolution: {integrity: sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==}
-    dev: true
-
   /lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
-    dev: true
-
-  /lodash.isstring@4.0.1:
-    resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
     dev: true
 
   /lodash.kebabcase@4.1.1:
@@ -4653,10 +4572,6 @@ packages:
 
   /lodash.mergewith@4.6.2:
     resolution: {integrity: sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==}
-    dev: true
-
-  /lodash.once@4.1.1:
-    resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
     dev: true
 
   /lodash.snakecase@4.1.1:
@@ -4800,32 +4715,6 @@ packages:
       '@fastify/error': 3.0.0
       fastify-plugin: 4.4.0
       graphql: 16.6.0
-    dev: true
-
-  /mercurius@12.2.0:
-    resolution: {integrity: sha512-S1/j+MSJA11A0rW/TM+31qq7PTf9EQVDtq+XJQMaebtqEP5JhhUmQnTLzCh9NhHkh7YIFH72gEY03Phr3Cs8xQ==}
-    engines: {node: '>=14.19.3'}
-    peerDependencies:
-      graphql: ^16.0.0
-    dependencies:
-      '@fastify/error': 3.0.0
-      '@fastify/static': 6.6.0
-      '@fastify/websocket': 7.1.1
-      fastify-plugin: 4.4.0
-      graphql-jit: 0.8.0
-      mqemitter: 5.0.0
-      p-map: 4.0.0
-      readable-stream: 4.2.0
-      safe-stable-stringify: 2.4.1
-      secure-json-parse: 2.7.0
-      single-user-cache: 0.6.0
-      tiny-lru: 10.0.1
-      undici: 5.14.0
-      ws: 8.11.0
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
     dev: true
 
   /mercurius@12.2.0(graphql@16.6.0):
@@ -5907,10 +5796,6 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /pop-iterate@1.0.1:
-    resolution: {integrity: sha512-HRCx4+KJE30JhX84wBN4+vja9bNfysxg1y28l0DuJmkoaICiv2ZSilKddbS48pq50P8d2erAhqDLbp47yv3MbQ==}
-    dev: true
-
   /postcss@8.4.21:
     resolution: {integrity: sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -6039,14 +5924,6 @@ packages:
   /q@1.5.1:
     resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
-    dev: true
-
-  /q@2.0.3:
-    resolution: {integrity: sha512-gv6vLGcmAOg96/fgo3d9tvA4dJNZL3fMyBqVRrGxQ+Q/o4k9QzbJ3NQF9cOO/71wRodoXhaPgphvMFU68qVAJQ==}
-    dependencies:
-      asap: 2.0.6
-      pop-iterate: 1.0.1
-      weak-map: 1.0.8
     dev: true
 
   /qlobber@7.0.1:
@@ -6310,10 +6187,6 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rootpath@0.1.2:
-    resolution: {integrity: sha512-R3wLbuAYejpxQjL/SjXo1Cjv4wcJECnMRT/FlcCfTwCBhaji9rWaRCoVEQ1SPiTJ4kKK+yh+bZLAV7SCafoDDw==}
-    dev: true
-
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
@@ -6571,35 +6444,6 @@ packages:
   /slick@1.12.2:
     resolution: {integrity: sha512-4qdtOGcBjral6YIBCWJ0ljFSKNLz9KkhbWtuGvUyRowl1kxfuE1x/Z/aJcaiilpb3do9bl5K7/1h9XC5wWpY/A==}
 
-  /slonik@33.1.4:
-    resolution: {integrity: sha512-hHvPr0WXlz+sayzpNg4PZlKhbsrvk1P44aNiOP9Fj9jugGqToytPu2aicDx13gaMYOh4XjBzx6tLtwidaiCWKQ==}
-    engines: {node: '>=10.0'}
-    peerDependencies:
-      zod: ^3
-    dependencies:
-      '@types/pg': 8.6.6
-      concat-stream: 2.0.0
-      es6-error: 4.1.1
-      get-stack-trace: 2.1.1
-      is-plain-object: 5.0.0
-      iso8601-duration: 1.3.0
-      p-defer: 3.0.0
-      pg: 8.10.0
-      pg-copy-streams: 6.0.4
-      pg-copy-streams-binary: 2.2.0
-      pg-cursor: 2.9.0(pg@8.10.0)
-      pg-protocol: 1.6.0
-      pg-types: 4.0.1
-      postgres-array: 3.0.1
-      postgres-interval: 4.0.0
-      roarr: 7.14.2
-      safe-stable-stringify: 2.4.1
-      serialize-error: 8.1.0
-      through2: 4.0.2
-    transitivePeerDependencies:
-      - pg-native
-    dev: true
-
   /slonik@33.1.4(zod@3.21.4):
     resolution: {integrity: sha512-hHvPr0WXlz+sayzpNg4PZlKhbsrvk1P44aNiOP9Fj9jugGqToytPu2aicDx13gaMYOh4XjBzx6tLtwidaiCWKQ==}
     engines: {node: '>=10.0'}
@@ -6796,8 +6640,8 @@ packages:
     resolution: {integrity: sha512-r0JFBjkMIdep3Lbk3JA+MpnpuOtw4RSyrlRAbrzMcxwiYco3GFWl/daimQZ5b1forOiUODpOlXbSOljP/oyurg==}
     dev: true
 
-  /supertokens-node@12.1.6:
-    resolution: {integrity: sha512-+amL2gTKptoMN6vbIiPaAug9UC+H5kgU7gwrQAFhKjcZiuQLXCEfq4k0rlSHBlRcJelfD4Iev4Q71wX31Z98uA==}
+  /supertokens-node@13.6.0:
+    resolution: {integrity: sha512-sErvcZOVUnHb5YazGTjHGKRdxlPT/as+S7t2UAA0FChCPa8p8NtVPR494VJYrXuVT1eBUqwie55BIFh7EvZJqQ==}
     dependencies:
       axios: 0.21.4(debug@4.3.4)
       body-parser: 1.20.1
@@ -6810,8 +6654,8 @@ packages:
       nodemailer: 6.9.1
       psl: 1.8.0
       supertokens-js-override: 0.0.4
-      twilio: 3.84.1(debug@4.3.4)
-      verify-apple-id-token: 2.2.0
+      twilio: 4.10.0(debug@4.3.4)
+      verify-apple-id-token: 3.0.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7118,18 +6962,15 @@ packages:
       turbo-windows-arm64: 1.9.3
     dev: true
 
-  /twilio@3.84.1(debug@4.3.4):
-    resolution: {integrity: sha512-Q/xaPoayTj+bgJdnUgpE+EiB/VoNOG+byDFdlDej0FgxiHLgXKliZfVv6boqHPWvC1k7Dt0AK96OBFZ0P55QQg==}
-    engines: {node: '>=6.0'}
+  /twilio@4.10.0(debug@4.3.4):
+    resolution: {integrity: sha512-j6reVBUqwrGHBKnCIoL1hUDPl/Yw6EYVvkYLmFBpVQ74AGf/9BCKXnvlkAgIkwFXzZikpNuo0mqIY/k9oMiFsA==}
+    engines: {node: '>=14.0'}
     dependencies:
       axios: 0.26.1(debug@4.3.4)
       dayjs: 1.11.7
       https-proxy-agent: 5.0.1
-      jsonwebtoken: 8.5.1
-      lodash: 4.17.21
-      q: 2.0.3
+      jsonwebtoken: 9.0.0
       qs: 6.11.0
-      rootpath: 0.1.2
       scmp: 2.1.0
       url-parse: 1.5.10
       xmlbuilder: 13.0.2
@@ -7301,11 +7142,11 @@ packages:
     engines: {node: '>= 0.10'}
     dev: false
 
-  /verify-apple-id-token@2.2.0:
-    resolution: {integrity: sha512-yV96h/6Wv9JY3Gcrg/3a+MyK8T5/RgNn4bVAkeuIwvCr4zanRsbrGKMgzD8UfH2Szr5veevmKdfLx8PfpING6Q==}
+  /verify-apple-id-token@3.0.1:
+    resolution: {integrity: sha512-q91pG1e52TpEzXldMirWYNWcSQC4WuzgG0y/ZnBhzjfk0pSxi4YlGh5OTVRlodBenayGHfSDn5VseG9QDuqOew==}
     dependencies:
-      jsonwebtoken: 8.5.1
-      jwks-rsa: 2.1.5
+      jsonwebtoken: 9.0.0
+      jwks-rsa: 3.0.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7465,10 +7306,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
-
-  /weak-map@1.0.8:
-    resolution: {integrity: sha512-lNR9aAefbGPpHO7AEnY0hCFjz1eTkWCXYvkTRrTHs9qv8zJp+SkVYpzfLIFXQQiG3tVvbNFQgVg2bQS8YGgxyw==}
-    dev: true
 
   /web-resource-inliner@6.0.1:
     resolution: {integrity: sha512-kfqDxt5dTB1JhqsCUQVFDj0rmY+4HLwGQIsLPbyrsN9y9WV/1oFDSx3BQ4GfCv9X+jVeQ7rouTqwK53rA/7t8A==}
